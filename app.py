@@ -4,8 +4,8 @@ from flask_jsonpify import jsonify
 app = Flask(__name__)
 
 lastData = {
-    "temp": "0",
-    "humid":"0"
+    "Nhiet do": "0",
+    "Do am":"0"
 }
 
 @app.route('/')
@@ -16,11 +16,11 @@ def hello():
 def receiveData():
     if request.method == 'POST':
         data = request.get_json()
-        lastData['temp'] = data['temp']
+        lastData['Nhiet do'] = data['temp']
+        lastData['Do am'] = data['humid']
         # temp = data['temp']
         # humid = data['humid']
-        return data
-        # return 'POST SUCCESS!'
+        return 'POST SUCCESS!'
     elif request.method == 'GET':
         # return jsonify(temp, humid)
         return lastData
