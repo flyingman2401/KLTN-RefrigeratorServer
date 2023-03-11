@@ -17,7 +17,7 @@ def receiveData():
     if request.method == 'POST':
         data = request.get_json()
         lastData['Nhiet do'] = data['temp']
-        lastData['Do am'] = data['humid']
+        lastData['Do am'] = data['humi']
         # temp = data['temp']
         # humid = data['humid']
         return 'POST SUCCESS!'
