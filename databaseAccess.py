@@ -14,3 +14,7 @@ def insertCollectionItem(mycol, data):
         return 1
     else:
         return 0
+    
+def getLatestCollectionItem(mycol):
+    item_details = mycol.find_one(sort =[('_id', pymongo.DESCENDING)])
+    return item_details
