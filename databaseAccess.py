@@ -18,3 +18,8 @@ def insertCollectionItem(mycol, data):
 def getLatestCollectionItem(mycol):
     item_details = mycol.find_one(sort =[('_id', pymongo.DESCENDING)])
     return item_details
+
+def findUser(mycol, email):
+    userdata = mycol.find_one({'email': email})
+    return userdata
+    
