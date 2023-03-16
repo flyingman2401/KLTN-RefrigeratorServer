@@ -2,5 +2,5 @@ Flask
 gunicorn
 flask_jsonpify
 pymongo
-PyJWT==2.3.0
+PyJWT
 werkzeug
