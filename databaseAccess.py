@@ -22,4 +22,13 @@ def getLatestCollectionItem(mycol):
 def findUser(mycol, email):
     userdata = mycol.find_one({'email': email})
     return userdata
-    
+
+def saveUserToken(mycol, email, token):
+    x = mycol.update_one(
+        {'email': email},
+        {"$set": {'token': token}}
+    )
+    if (x):
+        return 1
+    else:
+        return 0

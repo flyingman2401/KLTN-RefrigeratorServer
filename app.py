@@ -1,10 +1,9 @@
-from datetime import datetime, timedelta
 from  werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask, jsonify, make_response, request
 from bson import json_util
 import databaseAccess
 import json
-import jwt
+import handleToken
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Refrigerator'
@@ -32,24 +31,40 @@ def handleRequests():
         data = databaseAccess.getLatestCollectionItem(sensorsDataCollection)
         return json.loads(json_util.dumps(data))
     
-@app.route('/login', methods = ['POST'])
+@app.route('/login', methods = ['GET'])
 def handleLoginRequests():
-    auth = request.get_json()
-    
-    # check if user is exist in database
-    user = databaseAccess.findUser(userInformationCollection, auth['email'])
-    if not user:
-        return make_response('Khong ton tai nguoi dung!', 401)
-    
-    # check password and generate token key if correct    
-    if check_password_hash(user['password'], auth['password']):
-        token = jwt.encode({
-            'public_id': user['email'],
-            'exp' : datetime.utcnow() + timedelta(minutes = 30)
-        }, app.config['SECRET_KEY'])
-        return make_response(jsonify({'token' : token}), 201)
-    else:
-        return make_response('Khong the xac thuc nguoi dung!', 401)
+    data = request.headers.get('Authorization')
+    print(request.headers)
+
+    if (data.split()[0] == 'Basic'):
+        email = request.authorization.username
+        password = request.authorization.password
+        # check if user is exist in database
+        user = databaseAccess.findUser(userInformationCollection, email)
+        if not user:
+            return make_response('Khong ton tai nguoi dung!', 401)
+        
+        # check password and generate token key if correct    
+        if check_password_hash(user['password'], password):
+            token = handleToken.generateToken(email, app.config['SECRET_KEY'], userInformationCollection)
+            return make_response(jsonify({'token' : token}), 201)
+        else:
+            return make_response('Khong the xac thuc nguoi dung!', 401)
+        
+    elif (data.split()[0] == 'Bearer'):
+        token = data.split()[1]
+        email =  handleToken.checkToken(token, app.config['SECRET_KEY'], userInformationCollection)
+
+        if email == None:
+            return make_response('Not Authorized!', 401)
+        
+        token = handleToken.generateToken(email, app.config['SECRET_KEY'], userInformationCollection)
+        if token != None:
+            response = make_response('OK', 200)
+            response.headers['Authorization'] = token
+            return response
+        else:
+            return make_response('Server failed to refresh token', 500)
 
 @app.route('/signup', methods = ['POST'])
 def handleSignUpRequests():
@@ -67,7 +82,8 @@ def handleSignUpRequests():
         user = {
             'name': name,
             'email': email,
-            'password': generate_password_hash(password)
+            'password': generate_password_hash(password),
+            'token': ""
         }
         # insert user data to database
         if databaseAccess.insertCollectionItem(userInformationCollection, user):
