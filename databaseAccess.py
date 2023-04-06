@@ -32,3 +32,7 @@ def saveUserToken(mycol, email, token):
         return 1
     else:
         return 0
+    
+def removeCollectionItem(mycol, data):
+    x = mycol.delete_one(data)
+    return x

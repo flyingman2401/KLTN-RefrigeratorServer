@@ -4,6 +4,7 @@ from bson import json_util
 import databaseAccess
 import json
 import handleToken
+import foodManage
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Refrigerator'
@@ -12,6 +13,7 @@ app.config['SECRET_KEY'] = 'Refrigerator'
 connectionString = "mongodb+srv://19522437:trinhtrung12@kltn-refrigerator.qbihwdd.mongodb.net/test"
 sensorsDataCollection = databaseAccess.accessCollection(connectionString, "sensors", "data")
 userInformationCollection = databaseAccess.accessCollection(connectionString, "accounts", "user")
+FoodInsideFridgeCollection = databaseAccess.accessCollection(connectionString, "FoodManagement", "FoodInsideFridge")
 
 @app.route('/')
 def hello():
@@ -91,6 +93,22 @@ def handleSignUpRequests():
     else:
         return make_response('Da ton tai nguoi dung!', 202)
 
+@app.route('/FoodManagement', methods = ['POST'])
+def handleFoodManagement():
+    data = request.get_json()
+
+    x = False
+    if (data['action'] == 0):
+        x = foodManage.addFood(FoodInsideFridgeCollection, data['data'])
+    elif (data['action'] == 1):
+        x = foodManage.removeFood(FoodInsideFridgeCollection, data['data'])
+
+    if (x):
+        return make_response('Thanh cong!', 200)
+    else:
+        return make_response('Khong the thuc hien!', 500)
+        
+        
 
 if __name__ == '__main__':
    app.run(debug = True)
