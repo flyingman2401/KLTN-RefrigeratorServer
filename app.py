@@ -95,21 +95,8 @@ def handleSignUpRequests():
 
 @app.route('/FoodManagement', methods = ['GET', 'POST'])
 def handleFoodManagement():
-
-    if (request.method == 'GET'):
-        foodList = foodManage.getFoodList(FoodInsideFridgeCollection)
-
-        data = {
-            "count":len(foodList),
-            "data":foodList
-        }
-
-        if foodList != None:
-            return make_response(data, 200)
-        else:
-            return make_response('Không thể tải danh sách!', 500)
     
-    elif (request.method == 'POST'):
+    if (request.method == 'POST'):
         data = request.get_json()
 
         # action 0: add food into fridge
@@ -125,6 +112,19 @@ def handleFoodManagement():
             return make_response('Thanh cong!', 200)
         else:
             return make_response('Khong the thuc hien!', 500)
+        
+    elif (request.method == 'GET'):
+        foodList = foodManage.getFoodList(FoodInsideFridgeCollection)
+
+        data = {
+            "count":len(foodList),
+            "data":foodList
+        }
+
+        if foodList != None:
+            return make_response(data, 200)
+        else:
+            return make_response('Không thể tải danh sách!', 500)
         
         
 
