@@ -93,20 +93,39 @@ def handleSignUpRequests():
     else:
         return make_response('Da ton tai nguoi dung!', 202)
 
-@app.route('/FoodManagement', methods = ['POST'])
+@app.route('/FoodManagement', methods = ['GET', 'POST'])
 def handleFoodManagement():
+
+    # action 0: add food into fridge
+    # action 1: remove food from fridge
+    # action 2: get food list depend on page
     data = request.get_json()
 
-    x = False
-    if (data['action'] == 0):
-        x = foodManage.addFood(FoodInsideFridgeCollection, data['data'])
-    elif (data['action'] == 1):
-        x = foodManage.removeFood(FoodInsideFridgeCollection, data['data'])
+    if (request.method == 'GET'):
+        if (data['action'] == 2):
+            foodList = foodManage.getFoodList(FoodInsideFridgeCollection)
 
-    if (x):
-        return make_response('Thanh cong!', 200)
-    else:
-        return make_response('Khong the thuc hien!', 500)
+            data = {
+                "count":len(foodList),
+                "data":foodList
+            }
+
+            if foodList != None:
+                return make_response(data, 200)
+            else:
+                return make_response('Không thể tải danh sách!', 500)
+    
+    elif (request.method == 'POST'):
+        x = False
+        if (data['action'] == 0):
+            x = foodManage.addFood(FoodInsideFridgeCollection, data['data'])
+        elif (data['action'] == 1):
+            x = foodManage.removeFood(FoodInsideFridgeCollection, data['data'])
+
+        if (x):
+            return make_response('Thanh cong!', 200)
+        else:
+            return make_response('Khong the thuc hien!', 500)
         
         
 
