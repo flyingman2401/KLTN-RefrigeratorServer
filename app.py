@@ -98,22 +98,21 @@ def handleFoodManagement():
 
     # action 0: add food into fridge
     # action 1: remove food from fridge
-    # action 2: get food list depend on page
+
     data = request.get_json()
 
     if (request.method == 'GET'):
-        if (data['action'] == 2):
-            foodList = foodManage.getFoodList(FoodInsideFridgeCollection)
+        foodList = foodManage.getFoodList(FoodInsideFridgeCollection)
 
-            data = {
-                "count":len(foodList),
-                "data":foodList
-            }
+        data = {
+            "count":len(foodList),
+            "data":foodList
+        }
 
-            if foodList != None:
-                return make_response(data, 200)
-            else:
-                return make_response('Không thể tải danh sách!', 500)
+        if foodList != None:
+            return make_response(data, 200)
+        else:
+            return make_response('Không thể tải danh sách!', 500)
     
     elif (request.method == 'POST'):
         x = False
