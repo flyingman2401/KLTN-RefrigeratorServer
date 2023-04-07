@@ -11,9 +11,11 @@ app.config['SECRET_KEY'] = 'Refrigerator'
 
 # define mongoDB cloud connection string
 connectionString = "mongodb+srv://19522437:trinhtrung12@kltn-refrigerator.qbihwdd.mongodb.net/test"
-sensorsDataCollection = databaseAccess.accessCollection(connectionString, "sensors", "data")
-userInformationCollection = databaseAccess.accessCollection(connectionString, "accounts", "user")
-FoodInsideFridgeCollection = databaseAccess.accessCollection(connectionString, "FoodManagement", "FoodInsideFridge")
+sensorsData_Collection = databaseAccess.accessCollection(connectionString, "sensors", "data")
+userInformation_Collection = databaseAccess.accessCollection(connectionString, "accounts", "user")
+Dishes_Collection = databaseAccess.accessCollection(connectionString, "FoodManagement", "Dishes")
+FoodInsideFridge_Collection = databaseAccess.accessCollection(connectionString, "FoodManagement", "FoodInsideFridge")
+RecommendationDishes_Collection = databaseAccess.accessCollection(connectionString, "FoodManagement", "RecommendationDishes")
 
 @app.route('/')
 def hello():
@@ -24,13 +26,13 @@ def handleRequests():
 
     if request.method == 'POST':
         data = request.get_json()
-        if databaseAccess.insertCollectionItem(sensorsDataCollection, data):
+        if databaseAccess.insertCollectionItem(sensorsData_Collection, data):
             return 'POST SUCCESS!'
         else:
             return 'POST FAILED!'
         
     elif request.method == 'GET':
-        data = databaseAccess.getLatestCollectionItem(sensorsDataCollection)
+        data = databaseAccess.getLatestCollectionItem(sensorsData_Collection)
         return json.loads(json_util.dumps(data))
     
 @app.route('/login', methods = ['GET'])
@@ -42,25 +44,25 @@ def handleLoginRequests():
         email = request.authorization.username
         password = request.authorization.password
         # check if user is exist in database
-        user = databaseAccess.findUser(userInformationCollection, email)
+        user = databaseAccess.findUser(userInformation_Collection, email)
         if not user:
             return make_response('Khong ton tai nguoi dung!', 401)
         
         # check password and generate token key if correct    
         if check_password_hash(user['password'], password):
-            token = handleToken.generateToken(email, app.config['SECRET_KEY'], userInformationCollection)
+            token = handleToken.generateToken(email, app.config['SECRET_KEY'], userInformation_Collection)
             return make_response(jsonify({'token' : token}), 201)
         else:
             return make_response('Khong the xac thuc nguoi dung!', 401)
         
     elif (data.split()[0] == 'Bearer'):
         token = data.split()[1]
-        email =  handleToken.checkToken(token, app.config['SECRET_KEY'], userInformationCollection)
+        email =  handleToken.checkToken(token, app.config['SECRET_KEY'], userInformation_Collection)
 
         if email == None:
             return make_response('Not Authorized!', 401)
         
-        token = handleToken.generateToken(email, app.config['SECRET_KEY'], userInformationCollection)
+        token = handleToken.generateToken(email, app.config['SECRET_KEY'], userInformation_Collection)
         if token != None:
             response = make_response('OK', 200)
             response.headers['Authorization'] = token
@@ -76,7 +78,7 @@ def handleSignUpRequests():
     name, email, password = data['name'], data['email'], data['password']
   
     # checking for existing user
-    user = databaseAccess.findUser(userInformationCollection, email)
+    user = databaseAccess.findUser(userInformation_Collection, email)
     
     # create user if not existing
     if not user:
@@ -88,43 +90,45 @@ def handleSignUpRequests():
             'token': ""
         }
         # insert user data to database
-        if databaseAccess.insertCollectionItem(userInformationCollection, user):
+        if databaseAccess.insertCollectionItem(userInformation_Collection, user):
             return make_response('Dang ky nguoi dung thanh cong!', 201)
     else:
         return make_response('Da ton tai nguoi dung!', 202)
 
 @app.route('/FoodManagement', methods = ['GET', 'POST'])
 def handleFoodManagement():
+
+    # action 0: add food into fridge
+    # action 1: remove food from fridge
+    # action 2: get food inside fridge list
+    # action 3: get recommendation dishes list
     
     if (request.method == 'POST'):
         data = request.get_json()
-
-        # action 0: add food into fridge
-        # action 1: remove food from fridge
-
         x = False
         if (data['action'] == 0):
-            x = foodManage.addFood(FoodInsideFridgeCollection, data['data'])
+            x = foodManage.addFood(FoodInsideFridge_Collection, data['data'])
         elif (data['action'] == 1):
-            x = foodManage.removeFood(FoodInsideFridgeCollection, data['data'])
-
+            x = foodManage.removeFood(FoodInsideFridge_Collection, data['data'])
         if (x):
             return make_response('Thanh cong!', 200)
         else:
             return make_response('Khong the thuc hien!', 500)
         
     elif (request.method == 'GET'):
-        foodList = foodManage.getFoodList(FoodInsideFridgeCollection)
-
-        data = {
-            "count":len(foodList),
-            "data":foodList
-        }
-
-        if foodList != None:
+        args = request.args
+        if (args.get("action", type=int) == 2):
+            foodList = foodManage.getFoodList(FoodInsideFridge_Collection)
+            data = {
+                "count":len(foodList),
+                "data":foodList
+            }
             return make_response(data, 200)
+        elif (args.get("action", type=int) == 3):
+            rcmList = foodManage.getRecommendationList(RecommendationDishes_Collection, Dishes_Collection)
+            return make_response(rcmList, 200)
         else:
-            return make_response('Không thể tải danh sách!', 500)
+            return make_response('Không biết làm gì luôn??', 404)
         
         
 

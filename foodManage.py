@@ -10,15 +10,26 @@ def removeFood (mycol, data):
     return databaseAccess.removeCollectionItem(mycol, json.loads(data))
         
 def getFoodList (mycol):
-    foodList = []
-
-    for item in mycol.find({}):
-        foodList.append(json.loads(json_util.dumps(item)))
-
-    if len(foodList) == 0:
-        return None
-    
+    foodList = databaseAccess.listCollectionItem(mycol)
     return foodList
+
+def getRecommendationList (rcmCol, dishesCol):
+    recommendationList = []
+    recommendationInfo = databaseAccess.listCollectionItem(rcmCol)
+    
+    for item in recommendationInfo:
+        foodItem = databaseAccess.findCollectionItem(dishesCol, {'dishname':item['dishname']})
+
+        recommendationListItem = {
+            "dishname":item['dishname'],
+            "weight": item['weight'],
+            "ingredients": foodItem['ingredients'],
+        }
+
+        recommendationList.append(recommendationListItem)
+
+    return recommendationList
+
     
     
 

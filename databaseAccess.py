@@ -1,6 +1,8 @@
 # MongoDB functions
 
+import json
 import pymongo
+from bson import json_util
 
 def accessCollection(connectionString, dbName, collectionName):
     myclient = pymongo.MongoClient(connectionString)
@@ -36,3 +38,13 @@ def saveUserToken(mycol, email, token):
 def removeCollectionItem(mycol, data):
     x = mycol.delete_one(data)
     return x
+
+def listCollectionItem (mycol):
+    list = []
+    for item in mycol.find({}):
+        list.append(json.loads(json_util.dumps(item)))
+    return list
+
+def findCollectionItem(mycol, filter):
+    userdata = mycol.find_one(filter)
+    return userdata
