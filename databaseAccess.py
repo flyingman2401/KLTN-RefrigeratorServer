@@ -12,32 +12,11 @@ def accessCollection(connectionString, dbName, collectionName):
 
 def insertCollectionItem(mycol, data):
     x = mycol.insert_one(data)
-    if (x):
-        return 1
-    else:
-        return 0
+    return x
     
 def getLatestCollectionItem(mycol):
     item_details = mycol.find_one(sort =[('_id', pymongo.DESCENDING)])
     return item_details
-
-def findUser(mycol, email):
-    userdata = mycol.find_one({'email': email})
-    return userdata
-
-def saveUserToken(mycol, email, token):
-    x = mycol.update_one(
-        {'email': email},
-        {"$set": {'token': token}}
-    )
-    if (x):
-        return 1
-    else:
-        return 0
-    
-def removeCollectionItem(mycol, data):
-    x = mycol.delete_one(data)
-    return x
 
 def listCollectionItem (mycol):
     list = []
@@ -48,3 +27,22 @@ def listCollectionItem (mycol):
 def findCollectionItem(mycol, filter):
     userdata = mycol.find_one(filter)
     return userdata
+
+def emptyCollection(mycol):
+    x = mycol.remove()
+    return x
+
+def removeCollectionItem(mycol, data):
+    x = mycol.delete_one(data)
+    return x
+
+def findUser(mycol, email):
+    userdata = mycol.find_one({'email': email})
+    return userdata
+
+def saveUserToken(mycol, email, token):
+    x = mycol.update_one(
+        {'email': email},
+        {"$set": {'token': token}}
+    )
+    return x

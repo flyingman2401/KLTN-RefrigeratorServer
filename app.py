@@ -5,24 +5,58 @@ import databaseAccess
 import json
 import handleToken
 import foodManage
+from flask_mqtt import Mqtt
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Refrigerator'
 
 # define mongoDB cloud connection string
 connectionString = "mongodb+srv://19522437:trinhtrung12@kltn-refrigerator.qbihwdd.mongodb.net/test"
-sensorsData_Collection = databaseAccess.accessCollection(connectionString, "sensors", "data")
+sensorsData_Collection = databaseAccess.accessCollection(connectionString, "DeviceManagement", "SensorsData")
+devices_Collection = databaseAccess.accessCollection(connectionString, "DeviceManagement", "Devices")
 userInformation_Collection = databaseAccess.accessCollection(connectionString, "accounts", "user")
 Dishes_Collection = databaseAccess.accessCollection(connectionString, "FoodManagement", "Dishes")
 FoodInsideFridge_Collection = databaseAccess.accessCollection(connectionString, "FoodManagement", "FoodInsideFridge")
 RecommendationDishes_Collection = databaseAccess.accessCollection(connectionString, "FoodManagement", "RecommendationDishes")
+
+# config Flespi Broker parameters
+app.config['MQTT_BROKER_URL'] = 'mqtt.flespi.io'
+app.config['MQTT_BROKER_PORT'] = 1883
+app.config['MQTT_USERNAME'] = 'XYwy6gDl0Y76a9C5vl18YJtp0RxQzkYm8iJ3occc078Z6BUqKLmzkGM8l9OLiAVe'
+app.config['MQTT_PASSWORD'] = ''
+mqtt = Mqtt(app)
+
+# MQTT events handle
+
+@mqtt.on_connect()
+def handle_connect(client, userdata, flags, rc):
+    devicesList = databaseAccess.listCollectionItem(devices_Collection)
+    for device in devicesList:
+        mqtt.subscribe(device['deviceID'] + '/SensorsData')
+    print("MQTT Broker Connected")
+
+@mqtt.on_message()
+def handle_mqtt_message(client, userdata, message):
+    topic = message.topic
+    deviceID = topic.split('/')[0]
+    mqttData = message.payload.decode()
+    if topic.split('/')[1] == 'SensorsData':
+        data = {
+            "deviceID": deviceID,
+            "temp": float(mqttData.split(";")[0]),
+            "humi": float(mqttData.split(";")[1]),
+        }
+        databaseAccess.insertCollectionItem(sensorsData_Collection, data)
+
+# app routes
 
 @app.route('/')
 def hello():
     return "Hello tủ lạnh siêu thông minh!"
 
 @app.route('/SensorsData', methods = ['GET', 'POST'])
-def handleRequests():
+def handle_requests():
 
     if request.method == 'POST':
         data = request.get_json()
@@ -36,7 +70,7 @@ def handleRequests():
         return json.loads(json_util.dumps(data))
     
 @app.route('/login', methods = ['GET'])
-def handleLoginRequests():
+def handle_login_requests():
     data = request.headers.get('Authorization')
     print(request.headers)
 
@@ -71,7 +105,7 @@ def handleLoginRequests():
             return make_response('Server failed to refresh token', 500)
 
 @app.route('/signup', methods = ['POST'])
-def handleSignUpRequests():
+def handle_signup_requests():
     data = request.get_json()
   
     # gets name, email and password
@@ -96,7 +130,7 @@ def handleSignUpRequests():
         return make_response('Da ton tai nguoi dung!', 202)
 
 @app.route('/FoodManagement', methods = ['GET', 'POST'])
-def handleFoodManagement():
+def handle_food_management():
 
     # action 0: add food into fridge
     # action 1: remove food from fridge

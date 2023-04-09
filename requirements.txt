@@ -4,3 +4,4 @@ flask_jsonpify
 pymongo
 PyJWT
 werkzeug
+flask_mqtt

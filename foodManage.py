@@ -1,7 +1,5 @@
 import json
-from flask import jsonify
 import databaseAccess
-from bson import json_util
 
 def addFood (mycol, data):
     return databaseAccess.insertCollectionItem(mycol, json.loads(data))
@@ -18,10 +16,10 @@ def getRecommendationList (rcmCol, dishesCol):
     recommendationInfo = databaseAccess.listCollectionItem(rcmCol)
     
     for item in recommendationInfo:
-        foodItem = databaseAccess.findCollectionItem(dishesCol, {'dishname':item['dishname']})
+        foodItem = databaseAccess.findCollectionItem(dishesCol, {'dishname': item['dishname']})
 
         recommendationListItem = {
-            "dishname":item['dishname'],
+            "dishname": item['dishname'],
             "weight": item['weight'],
             "ingredients": foodItem['ingredients'],
         }
