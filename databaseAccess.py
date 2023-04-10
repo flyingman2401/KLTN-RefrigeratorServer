@@ -23,7 +23,7 @@ def getTopCollectionItem(mycol, n):
     return items
 
 def countCollectionItems(mycol): # add count by deviceID for futher purposes
-    count = mycol.count({})
+    count = mycol.count_documents({})
     return count
 
 def listCollectionItem (mycol):
