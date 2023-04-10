@@ -78,7 +78,7 @@ def handle_requests():
     elif request.method == 'GET':
         data = []
         limitItems = 10
-        itemsCount = databaseAccess.countCollectionItem(sensorsData_Collection)
+        itemsCount = databaseAccess.countCollectionItems(sensorsData_Collection)
         if(itemsCount < limitItems):
             data = databaseAccess.getTopCollectionItem(sensorsData_Collection, itemsCount)
         else:

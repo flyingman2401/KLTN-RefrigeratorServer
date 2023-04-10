@@ -22,7 +22,7 @@ def getTopCollectionItem(mycol, n):
     items = mycol.find(sort =[('_id', pymongo.DESCENDING)]).limit(n)
     return items
 
-def countCollectionItem(mycol): # add count by deviceID for futher purposes
+def countCollectionItems(mycol): # add count by deviceID for futher purposes
     count = mycol.count()
     return count
 
