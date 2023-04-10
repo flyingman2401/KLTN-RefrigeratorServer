@@ -18,6 +18,14 @@ def getLatestCollectionItem(mycol):
     item_details = mycol.find_one(sort =[('_id', pymongo.DESCENDING)])
     return item_details
 
+def getTopCollectionItem(mycol, n):
+    items = mycol.find(sort =[('_id', pymongo.DESCENDING)]).limit(n)
+    return items
+
+def countCollectionItem(mycol): # add count by deviceID for futher purposes
+    count = mycol.count()
+    return count
+
 def listCollectionItem (mycol):
     list = []
     for item in mycol.find({}):

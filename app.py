@@ -6,6 +6,7 @@ import json
 import handleToken
 import foodManage
 from flask_mqtt import Mqtt
+from datetime import datetime
 
 
 app = Flask(__name__)
@@ -41,9 +42,11 @@ def handle_mqtt_message(client, userdata, message):
     topic = message.topic
     deviceID = topic.split('/')[0]
     mqttData = message.payload.decode()
+    time = datetime.now()
     if topic.split('/')[1] == 'SensorsData':
         data = {
             "deviceID": deviceID,
+            "time": time,
             "temp": float(mqttData.split(";")[0]),
             "humi": float(mqttData.split(";")[1]),
         }
@@ -59,14 +62,27 @@ def hello():
 def handle_requests():
 
     if request.method == 'POST':
-        data = request.get_json()
+        sensorsData = request.get_json()
+        time = datetime.now()
+        data = {
+            "deviceID": sensorsData['deviceID'],
+            "time": time,
+            "temp": sensorsData['temp'],
+            "humi": sensorsData['humi'],
+        }
         if databaseAccess.insertCollectionItem(sensorsData_Collection, data):
             return 'POST SUCCESS!'
         else:
             return 'POST FAILED!'
         
     elif request.method == 'GET':
-        data = databaseAccess.getLatestCollectionItem(sensorsData_Collection)
+        data = []
+        limitItems = 10
+        itemsCount = databaseAccess.countCollectionItem(sensorsData_Collection)
+        if(itemsCount < limitItems):
+            data = databaseAccess.getTopCollectionItem(sensorsData_Collection, itemsCount)
+        else:
+            data = databaseAccess.getTopCollectionItem(sensorsData_Collection, limitItems)
         return json.loads(json_util.dumps(data))
     
 @app.route('/login', methods = ['GET'])
@@ -129,7 +145,7 @@ def handle_signup_requests():
     else:
         return make_response('Da ton tai nguoi dung!', 202)
 
-@app.route('/FoodManagement', methods = ['GET', 'POST'])
+@app.route('/FoodManagement', methods = ['GET', 'POST', 'DELETE', 'PUT'])
 def handle_food_management():
 
     # action 0: add food into fridge
