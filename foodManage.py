@@ -11,17 +11,21 @@ def getFoodList (mycol):
     foodList = databaseAccess.listCollectionItem(mycol)
     return foodList
 
-def getRecommendationList (rcmCol, dishesCol):
+def getRecommendationList (rcmCol, dishesCol, ingredientCol):
     recommendationList = []
     recommendationInfo = databaseAccess.listCollectionItem(rcmCol)
     
     for item in recommendationInfo:
-        foodItem = databaseAccess.findCollectionItem(dishesCol, {'dishname': item['dishname']})
+        dishItem = databaseAccess.findCollectionItem(dishesCol, {'id': item['dish_id']})
+        ingredientList = []
+        for ingredient in dishItem['dish_ingredients']:
+            ingredientInfo = databaseAccess.findCollectionItem(ingredientCol, {'id': ingredient[0]})
+            ingredientList.append(ingredientInfo['ingredient_name'])
 
         recommendationListItem = {
-            "dishname": item['dishname'],
+            "dishname": dishItem['dish_name'],
             "weight": item['weight'],
-            "ingredients": foodItem['ingredients'],
+            "ingredients": dishItem['dish_ingredients'],
         }
 
         recommendationList.append(recommendationListItem)
