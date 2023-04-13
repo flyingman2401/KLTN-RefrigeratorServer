@@ -24,9 +24,9 @@ def getRecommendationList (rcmCol, dishesCol, ingredientCol):
             ingredientList.append(ingredientInfo['ingredient_name'])
 
         recommendationListItem = {
-            "dishname": dishItem['dish_name'],
+            "dish_name": dishItem['dish_name'],
             "weight": item['weight'],
-            "ingredients": dishItem['dish_ingredients'],
+            "dish_ingredients": dishItem['dish_ingredients'],
         }
 
         recommendationList.append(recommendationListItem)

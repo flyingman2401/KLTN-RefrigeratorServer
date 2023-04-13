@@ -101,7 +101,7 @@ def handle_food_management():
             ingredientsList = foodManage.getFoodList(collectionList['IngredientInsideFridge'])
             return make_response(ingredientsList, 200)
         elif (args.get("action", type=int) == 2):
-            rcmList = foodManage.getRecommendationList(collectionList['RecommendationDishes'], collectionList['Dish'])
+            rcmList = foodManage.getRecommendationList(collectionList['RecommendationDishes'], collectionList['Dish'], collectionList['Ingredient'])
             return make_response(rcmList, 200)
         else:
             return make_response('Không biết làm gì luôn??', 404)
