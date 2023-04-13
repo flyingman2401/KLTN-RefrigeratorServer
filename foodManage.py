@@ -1,11 +1,12 @@
 import json
 import databaseAccess
 
-def addFood (mycol, data):
-    return databaseAccess.insertCollectionItem(mycol, data)
     
 def removeFood (mycol, data):
-    return databaseAccess.removeCollectionItem(mycol, json.loads(data))
+    item = databaseAccess.findCollectionItem(mycol, data)
+    if item:
+        return databaseAccess.removeCollectionItem(mycol, data)
+    return False
         
 def getFoodList (mycol):
     foodList = databaseAccess.listCollectionItem(mycol)
