@@ -88,7 +88,7 @@ def handle_food_management():
 
     if (request.method == 'POST'):
         data = request.get_json()
-        x = foodManage.addFood(collectionList['IngredientInsideFridge'], data)
+        x = databaseAccess.insertCollectionItem(collectionList['IngredientInsideFridge'], data)
         if (x):
             return make_response('Thanh cong!', 200)
         else:

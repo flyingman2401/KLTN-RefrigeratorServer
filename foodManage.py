@@ -2,7 +2,7 @@ import json
 import databaseAccess
 
 def addFood (mycol, data):
-    return databaseAccess.insertCollectionItem(mycol, json.loads(data))
+    return databaseAccess.insertCollectionItem(mycol, data)
     
 def removeFood (mycol, data):
     return databaseAccess.removeCollectionItem(mycol, json.loads(data))
