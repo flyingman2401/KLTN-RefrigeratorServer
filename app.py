@@ -99,6 +99,11 @@ def handle_food_management():
         args = request.args
         if (args.get("action", type=int) == 1):
             ingredientsList = foodManage.getFoodList(collectionList['IngredientInsideFridge'])
+            for item in ingredientsList:
+                itemdetail = databaseAccess.findCollectionItem(collectionList['Ingredient'], {"id": item['ingredient_id']})
+                print(itemdetail)
+                item['ingredient_name'] = itemdetail['ingredient_name']
+                item['ingredient_image'] = itemdetail['ingredient_image']
             return make_response(ingredientsList, 200)
         elif (args.get("action", type=int) == 2):
             rcmList = foodManage.getRecommendationList(collectionList['RecommendationDishes'], collectionList['Dish'], collectionList['Ingredient'])
