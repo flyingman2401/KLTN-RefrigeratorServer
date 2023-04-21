@@ -7,6 +7,15 @@ def removeFood (mycol, data):
     if item:
         return databaseAccess.removeCollectionItem(mycol, data)
     return False
+
+def updateFood (mycol, data):
+    filter = {
+        'ingredient_id': data['ingredient_id'],
+        'user_id': data['user_id'],
+        'food_manufacture': data['food_manufacture'],
+        'food_PRD': data['food_PRD']
+    }
+    return databaseAccess.updateCollectionItem(mycol, filter, {'food_amount':data['food_amount']})
         
 def getFoodList (mycol):
     foodList = databaseAccess.listCollectionItem(mycol)

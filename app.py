@@ -122,7 +122,12 @@ def handle_food_management():
 
 
     elif (request.method == 'PUT'):
-        make_response("No implementation yet!")
+        data = request.get_json()
+        x = foodManage.updateFood(collectionList['IngredientInsideFridge'], data)
+        if (x):
+            return make_response('Thanh cong!', 200)
+        else:
+            return make_response('Khong the thuc hien!', 500)
 
       
 

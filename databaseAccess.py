@@ -46,6 +46,11 @@ def removeCollectionItem(mycol, data):
     x = mycol.delete_one(data)
     return x
 
+def updateCollectionItem(mycol, query, value):
+    x = mycol.update_one(query, {"$set": value})
+    return x
+
+
 def findUser(mycol, email):
     userdata = mycol.find_one({'email': email})
     return userdata
