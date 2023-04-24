@@ -33,9 +33,7 @@ def listCollectionItem (mycol):
     return list
 
 def findCollectionItem(mycol, filter):
-    print(filter)
     userdata = mycol.find_one(filter)
-    print(userdata)
     return userdata
 
 def emptyCollection(mycol):

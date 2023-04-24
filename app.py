@@ -106,7 +106,12 @@ def handle_food_management():
                 item['ingredient_image'] = itemdetail['ingredient_image']
             return make_response(ingredientsList, 200)
         elif (args.get("action", type=int) == 2):
-            rcmList = foodManage.getRecommendationList(collectionList['RecommendationDishes'], collectionList['Dish'], collectionList['Ingredient'])
+            rcmList = foodManage.getRecommendationList(
+                collectionList['RecommendationDishes'], 
+                collectionList['Dish'], 
+                collectionList['Ingredient'],
+                collectionList['DishType']
+            )
             return make_response(rcmList, 200)
         else:
             return make_response('Không biết làm gì luôn??', 404)
