@@ -23,7 +23,8 @@ collectionList = {
     "Ingredient":"",
     "DishType":"",
     "IngredientInsideFridge":"", 
-    "RecommendationDishes":""
+    "RecommendationDish":"",
+    "RecommendationMeal":""
 }
 for item in collectionList:
     collectionList[item] = databaseAccess.accessCollection(connectionString, "RefrigeratorManagement", item)
@@ -79,12 +80,6 @@ def handle_requests():
 
 @app.route('/FoodManagement', methods = ['GET', 'POST', 'DELETE', 'PUT'])
 def handle_food_management():
-    
-    # POST method is used to add an ingredient to IngredientInsideFridge Collection
-    # GET method is used to get list of data:
-    # - action 1: get list of ingredients inside fridge
-    # - action 2: get list of recommendation dishes
-    # DELETE method is used to delete an ingredient in IngredientInsideFridge Collection
 
     if (request.method == 'POST'):
         data = request.get_json()
@@ -94,108 +89,80 @@ def handle_food_management():
         else:
             return make_response('Khong the thuc hien!', 500)
 
-
     elif (request.method == 'GET'):
         args = request.args
+
+        # action 1: get list of ingredients inside fridge
         if (args.get("action", type=int) == 1):
-            ingredientsList = foodManage.getFoodList(collectionList['IngredientInsideFridge'])
-            for item in ingredientsList:
-                itemdetail = databaseAccess.findCollectionItem(collectionList['Ingredient'], {"id": item['ingredient_id']})
-                print(itemdetail)
-                item['ingredient_name'] = itemdetail['ingredient_name']
-                item['ingredient_image'] = itemdetail['ingredient_image']
-            return make_response(ingredientsList, 200)
+            listIngredient = foodManage.getListIngredientInsideFridge(
+                collectionList['IngredientInsideFridge'],
+                collectionList['Ingredient']
+            )
+            return make_response(listIngredient, 200)
+        
+        # action 2: get list of recommendation dishes
         elif (args.get("action", type=int) == 2):
-            rcmList = foodManage.getRecommendationList(
-                collectionList['RecommendationDishes'], 
+            listRcmDish = foodManage.getListRecommedationDish(
+                collectionList['RecommendationDish'], 
                 collectionList['Dish'], 
                 collectionList['Ingredient'],
                 collectionList['DishType']
             )
-            return make_response(rcmList, 200)
+            return make_response(listRcmDish, 200)
+        
+        # action 3: get list of recommendation meal
+        elif (args.get("action", type=int) == 3):
+            listRcmMeal = foodManage.getListRecommedationMeal(
+                collectionList['RecommendationMeal'], 
+                collectionList['Dish'], 
+                collectionList['Ingredient'],
+                collectionList['DishType']
+            )
+            return make_response(listRcmMeal, 200)
+        
         else:
             return make_response('Không biết làm gì luôn??', 404)
 
-
     elif (request.method == 'DELETE'):
         data = request.get_json()
-        x = foodManage.removeFood(collectionList['IngredientInsideFridge'], data)
+        x = foodManage.removeIngredient(collectionList['IngredientInsideFridge'], data)
         if (x):
             return make_response('Thanh cong!', 200)
         else:
             return make_response('Khong the thuc hien!', 500)
-
 
     elif (request.method == 'PUT'):
         data = request.get_json()
-        x = foodManage.updateFood(collectionList['IngredientInsideFridge'], data)
+        x = foodManage.updateIngredient(collectionList['IngredientInsideFridge'], data)
         if (x):
             return make_response('Thanh cong!', 200)
         else:
             return make_response('Khong the thuc hien!', 500)
 
-      
-
-# @app.route('/login', methods = ['GET'])
-# def handle_login_requests():
-#     data = request.headers.get('Authorization')
-#     print(request.headers)
-
-#     if (data.split()[0] == 'Basic'):
-#         email = request.authorization.username
-#         password = request.authorization.password
-#         # check if user is exist in database
-#         user = databaseAccess.findUser(userInformation_Collection, email)
-#         if not user:
-#             return make_response('Khong ton tai nguoi dung!', 401)
-        
-#         # check password and generate token key if correct    
-#         if check_password_hash(user['password'], password):
-#             token = handleToken.generateToken(email, app.config['SECRET_KEY'], userInformation_Collection)
-#             return make_response(jsonify({'token' : token}), 201)
-#         else:
-#             return make_response('Khong the xac thuc nguoi dung!', 401)
-        
-#     elif (data.split()[0] == 'Bearer'):
-#         token = data.split()[1]
-#         email =  handleToken.checkToken(token, app.config['SECRET_KEY'], userInformation_Collection)
-
-#         if email == None:
-#             return make_response('Not Authorized!', 401)
-        
-#         token = handleToken.generateToken(email, app.config['SECRET_KEY'], userInformation_Collection)
-#         if token != None:
-#             response = make_response('OK', 200)
-#             response.headers['Authorization'] = token
-#             return response
-#         else:
-#             return make_response('Server failed to refresh token', 500)
-
-# @app.route('/signup', methods = ['POST'])
-# def handle_signup_requests():
-#     data = request.get_json()
-  
-#     # gets name, email and password
-#     name, email, password = data['name'], data['email'], data['password']
-  
-#     # checking for existing user
-#     user = databaseAccess.findUser(userInformation_Collection, email)
+@app.route('/Rating', methods = ['POST', 'PUT'])
+def handle_rating():    
+    if (request.method == 'POST'):
+        data = request.get_json()
+        x = foodManage.rateDish(
+            collectionList['Rating'],
+            data
+        )
+        if (x):
+            return make_response('Thanh cong!', 200)
+        else:
+            return make_response('Khong the thuc hien!', 500)
     
-#     # create user if not existing
-#     if not user:
-#         # user data in json object
-#         user = {
-#             'name': name,
-#             'email': email,
-#             'password': generate_password_hash(password),
-#             'token': ""
-#         }
-#         # insert user data to database
-#         if databaseAccess.insertCollectionItem(userInformation_Collection, user):
-#             return make_response('Dang ky nguoi dung thanh cong!', 201)
-#     else:
-#         return make_response('Da ton tai nguoi dung!', 202)
-  
+    elif (request.method == 'PUT'):
+        data = request.get_json()
+        x = foodManage.rateDish(
+            collectionList['Rating'],
+            data
+        )
+        if (x):
+            return make_response('Thanh cong!', 200)
+        else:
+            return make_response('Khong the thuc hien!', 500)
+
 
 if __name__ == '__main__':
    app.run(debug = True)

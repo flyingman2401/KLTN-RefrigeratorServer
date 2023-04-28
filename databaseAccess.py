@@ -13,14 +13,18 @@ def accessCollection(connectionString, dbName, collectionName):
 def insertCollectionItem(mycol, data):
     x = mycol.insert_one(data)
     return x
-    
-def getLatestCollectionItem(mycol):
-    item_details = mycol.find_one(sort =[('_id', pymongo.DESCENDING)])
-    return item_details
 
-def getTopCollectionItem(mycol, n):
-    items = mycol.find(sort =[('_id', pymongo.DESCENDING)]).limit(n)
-    return items
+def removeCollectionItem(mycol, data):
+    x = mycol.delete_one(data)
+    return x
+
+def updateCollectionItem(mycol, query, value):
+    x = mycol.update_one(query, {"$set": value})
+    return x
+
+def findCollectionItem(mycol, filter):
+    userdata = mycol.find_one(filter)
+    return userdata
 
 def countCollectionItems(mycol): # add count by deviceID for futher purposes
     count = mycol.count_documents({})
@@ -32,30 +36,27 @@ def listCollectionItem (mycol):
         list.append(json.loads(json_util.dumps(item)))
     return list
 
-def findCollectionItem(mycol, filter):
-    userdata = mycol.find_one(filter)
-    return userdata
-
 def emptyCollection(mycol):
     x = mycol.remove()
     return x
 
-def removeCollectionItem(mycol, data):
-    x = mycol.delete_one(data)
-    return x
+# Cân nhắc gộp 2 hàm
 
-def updateCollectionItem(mycol, query, value):
-    x = mycol.update_one(query, {"$set": value})
-    return x
+def getLatestCollectionItem(mycol):
+    item_details = mycol.find_one(sort =[('_id', pymongo.DESCENDING)])
+    return item_details
 
+def getTopCollectionItem(mycol, n):
+    items = mycol.find(sort =[('_id', pymongo.DESCENDING)]).limit(n)
+    return items
 
-def findUser(mycol, email):
-    userdata = mycol.find_one({'email': email})
-    return userdata
+# def findUser(mycol, email):
+#     userdata = mycol.find_one({'email': email})
+#     return userdata
 
-def saveUserToken(mycol, email, token):
-    x = mycol.update_one(
-        {'email': email},
-        {"$set": {'token': token}}
-    )
-    return x
+# def saveUserToken(mycol, email, token):
+#     x = mycol.update_one(
+#         {'email': email},
+#         {"$set": {'token': token}}
+#     )
+#     return x
