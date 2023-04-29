@@ -1,5 +1,3 @@
-# MongoDB functions
-
 import json
 import pymongo
 from bson import json_util
@@ -40,23 +38,6 @@ def emptyCollection(mycol):
     x = mycol.remove()
     return x
 
-# Cân nhắc gộp 2 hàm
-
-def getLatestCollectionItem(mycol):
-    item_details = mycol.find_one(sort =[('_id', pymongo.DESCENDING)])
-    return item_details
-
 def getTopCollectionItem(mycol, n):
     items = mycol.find(sort =[('_id', pymongo.DESCENDING)]).limit(n)
     return items
-
-# def findUser(mycol, email):
-#     userdata = mycol.find_one({'email': email})
-#     return userdata
-
-# def saveUserToken(mycol, email, token):
-#     x = mycol.update_one(
-#         {'email': email},
-#         {"$set": {'token': token}}
-#     )
-#     return x

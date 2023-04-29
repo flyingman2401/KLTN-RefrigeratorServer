@@ -11,6 +11,7 @@ def getDishInfo (dishCol, ingredientCol, typeCol, id):
     dishType = databaseAccess.findCollectionItem(typeCol, {'id': dishItem['dishtype_id']})
 
     dishInfo = {
+        "dish_id": dishItem['id'],
         "dish_name": dishItem['dish_name'],
         "dish_ingredients": dishItem['dish_ingredients'],
         "dish_image": dishItem['dish_image'],
