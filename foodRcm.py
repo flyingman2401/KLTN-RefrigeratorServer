@@ -53,7 +53,7 @@ def updateIgdWeight(dishCol, dishID, mealIgd):
             if (ingredient[0] == appendedIgd[0]):
                 appendedIgd[1] += weightIngredient
                 return
-        mealIgd.append([ingredient[0], weightIngredient])
+        mealIgd.append([ingredient[0], ingredient[1], ingredient[2], weightIngredient])
 
 def updateRcmDish(dishCol, igdInsideFridgeCol, rcmDishCol, ratingCol, userID):
     dishList = databaseAccess.listCollectionItem(dishCol, {})
@@ -81,6 +81,7 @@ def updateRcmDish(dishCol, igdInsideFridgeCol, rcmDishCol, ratingCol, userID):
 def updateRcmMeal(dishCol, igdInsideFridgeCol, rcmDishCol, ratingCol, userID):
     recommendedMeal = [[],[],[]]
     recommendedDishList = databaseAccess.listCollectionItem(rcmDishCol, {'user_id': userID})
+    igdInsideFridgeList = databaseAccess.listCollectionItem(igdInsideFridgeCol, {'user_id': userID})
 
     # Classify recommendation dishes into 3 different dishtype array
     for recommendedDish in recommendedDishList:
@@ -107,7 +108,7 @@ def updateRcmMeal(dishCol, igdInsideFridgeCol, rcmDishCol, ratingCol, userID):
 
     # Calculate the weight for each recommended meal
     for mealID, mealIgd in igdOfMeals.items():
-        weightIngredient = calculateIgdWeight(mealIgd, igdInsideFridgeCol)
+        weightIngredient = calculateIgdWeight(mealIgd, igdInsideFridgeList)
 
         dishIDs = mealID.split('-')
         weightRating = 0
