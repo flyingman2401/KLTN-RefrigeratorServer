@@ -3,7 +3,7 @@ from flask import Flask, jsonify, make_response, request
 from bson import json_util
 import databaseAccess
 import json
-import handleToken
+import foodRcm
 import foodManage
 from flask_mqtt import Mqtt
 from datetime import datetime
@@ -40,7 +40,7 @@ mqtt = Mqtt(app)
 
 @mqtt.on_connect()
 def handle_connect(client, userdata, flags, rc):
-    devicesList = databaseAccess.listCollectionItem(collectionList['Device'])
+    devicesList = databaseAccess.listCollectionItem(collectionList['Device'], {})
     for device in devicesList:
         mqtt.subscribe(device['id'] + '/SensorsData')
     print("MQTT Broker Connected")
@@ -85,6 +85,20 @@ def handle_food_management():
         data = request.get_json()
         x = databaseAccess.insertCollectionItem(collectionList['IngredientInsideFridge'], data)
         if (x):
+            foodRcm.updateRcmDish(
+                collectionList['Dish'],
+                collectionList['IngredientInsideFridge'],
+                collectionList['RecommendationDish'],
+                collectionList['Rating'],
+                data['user_id']
+            ),
+            foodRcm.updateRcmMeal(
+                collectionList['Dish'],
+                collectionList['IngredientInsideFridge'],
+                collectionList['RecommendationDish'],
+                collectionList['Rating'],
+                data['user_id']
+            )
             return make_response('Thanh cong!', 200)
         else:
             return make_response('Khong the thuc hien!', 500)

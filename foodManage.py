@@ -37,7 +37,7 @@ def updateIngredient (mycol, data):
     return databaseAccess.updateCollectionItem(mycol, filter, {'food_amount':data['food_amount']})
         
 def getListIngredientInsideFridge (igdInsideCol, igdCol):
-    listIngredient = databaseAccess.listCollectionItem(igdInsideCol)
+    listIngredient = databaseAccess.listCollectionItem(igdInsideCol, {})
     for item in listIngredient:
         itemdetail = databaseAccess.findCollectionItem(igdCol, {"id": item['ingredient_id']})
         item['ingredient_name'] = itemdetail['ingredient_name']
@@ -47,7 +47,7 @@ def getListIngredientInsideFridge (igdInsideCol, igdCol):
 
 def getListRecommedationDish (rcmCol, dishCol, ingredientCol, typeCol):
     listRcmDish = []
-    listRcm = databaseAccess.listCollectionItem(rcmCol)
+    listRcm = databaseAccess.listCollectionItem(rcmCol, {})
     
     for item in listRcm:
         dishItem = getDishInfo(dishCol, ingredientCol, typeCol, item['dish_id'])
@@ -58,7 +58,7 @@ def getListRecommedationDish (rcmCol, dishCol, ingredientCol, typeCol):
 
 def getListRecommedationMeal (rcmCol, dishCol, ingredientCol, typeCol):
     listRcmMeal = []
-    listRcm = databaseAccess.listCollectionItem(rcmCol)
+    listRcm = databaseAccess.listCollectionItem(rcmCol, {})
 
     for item in listRcm:
         dishInfo = []

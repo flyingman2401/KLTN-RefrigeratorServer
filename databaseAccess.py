@@ -28,14 +28,14 @@ def countCollectionItems(mycol): # add count by deviceID for futher purposes
     count = mycol.count_documents({})
     return count
 
-def listCollectionItem (mycol):
+def listCollectionItem(mycol, filter):
     list = []
-    for item in mycol.find({}):
+    for item in mycol.find(filter):
         list.append(json.loads(json_util.dumps(item)))
     return list
 
-def emptyCollection(mycol):
-    x = mycol.remove()
+def emptyCollection(mycol, filter):
+    x = mycol.delete_many(filter)
     return x
 
 def getTopCollectionItem(mycol, n):
