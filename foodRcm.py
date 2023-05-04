@@ -78,7 +78,7 @@ def updateRcmDish(dishCol, igdInsideFridgeCol, rcmDishCol, ratingCol, userID):
 
             databaseAccess.insertCollectionItem(rcmDishCol, jsonData)
 
-def updateRcmMeal(dishCol, igdInsideFridgeCol, rcmDishCol, ratingCol, userID):
+def updateRcmMeal(dishCol, igdInsideFridgeCol, rcmDishCol, rcmMealCol, ratingCol, userID):
     recommendedMeal = [[],[],[]]
     recommendedDishList = databaseAccess.listCollectionItem(rcmDishCol, {'user_id': userID})
     igdInsideFridgeList = databaseAccess.listCollectionItem(igdInsideFridgeCol, {'user_id': userID})
@@ -89,6 +89,7 @@ def updateRcmMeal(dishCol, igdInsideFridgeCol, rcmDishCol, ratingCol, userID):
         recommendedMeal[dishType].append(recommendedDish['dish_id'])
 
     igdOfMeals = {}
+    databaseAccess.emptyCollection(rcmMealCol, {'user_id': userID})
 
     # Check if enough condition to recommend meals
     if (len(recommendedMeal[0]) == 0 or len(recommendedMeal[1]) == 0 or len(recommendedMeal[2]) == 0):
@@ -124,3 +125,5 @@ def updateRcmMeal(dishCol, igdInsideFridgeCol, rcmDishCol, ratingCol, userID):
             "weight": round(weightMeal, 5)
         }
         print(jsonData)
+
+        databaseAccess.insertCollectionItem(rcmMealCol, jsonData)

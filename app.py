@@ -96,6 +96,7 @@ def handle_food_management():
                 collectionList['Dish'],
                 collectionList['IngredientInsideFridge'],
                 collectionList['RecommendationDish'],
+                collectionList['RecommendationMeal'],
                 collectionList['Rating'],
                 data['user_id']
             )
