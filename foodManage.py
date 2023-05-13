@@ -47,7 +47,7 @@ def getListIngredientInsideFridge (igdInsideCol, igdCol):
 
 def getListRecommedationDish (rcmCol, dishCol, ingredientCol, typeCol):
     listRcmDish = []
-    listRcm = databaseAccess.listCollectionItem(rcmCol, {})
+    listRcm = databaseAccess.listCollectionItem(rcmCol, {}, "weight", -1)
     
     for item in listRcm:
         dishItem = getDishInfo(dishCol, ingredientCol, typeCol, item['dish_id'])
@@ -58,7 +58,7 @@ def getListRecommedationDish (rcmCol, dishCol, ingredientCol, typeCol):
 
 def getListRecommedationMeal (rcmCol, dishCol, ingredientCol, typeCol):
     listRcmMeal = []
-    listRcm = databaseAccess.listCollectionItem(rcmCol, {})
+    listRcm = databaseAccess.listCollectionItem(rcmCol, {}, "weight", -1)
 
     for item in listRcm:
         dishInfo = []
