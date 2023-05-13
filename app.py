@@ -142,6 +142,21 @@ def handle_food_management():
         data = request.get_json()
         x = foodManage.removeIngredient(collectionList['IngredientInsideFridge'], data)
         if (x):
+            foodRcm.updateRcmDish(
+                collectionList['Dish'],
+                collectionList['IngredientInsideFridge'],
+                collectionList['RecommendationDish'],
+                collectionList['Rating'],
+                data['user_id']
+            ),
+            foodRcm.updateRcmMeal(
+                collectionList['Dish'],
+                collectionList['IngredientInsideFridge'],
+                collectionList['RecommendationDish'],
+                collectionList['RecommendationMeal'],
+                collectionList['Rating'],
+                data['user_id']
+            )
             return make_response('Thanh cong!', 200)
         else:
             return make_response('Khong the thuc hien!', 500)
