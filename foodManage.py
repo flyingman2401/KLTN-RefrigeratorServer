@@ -62,7 +62,7 @@ def getListRecommedationMeal (rcmCol, dishCol, ingredientCol, typeCol):
 
     for item in listRcm:
         dishInfo = []
-        dishID = item['id'].split("_")
+        dishID = item['meal_id'].split("-")
 
         for id in dishID:
             dishItem = getDishInfo(dishCol, ingredientCol, typeCol, id)
