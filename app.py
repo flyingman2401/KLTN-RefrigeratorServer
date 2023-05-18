@@ -53,10 +53,10 @@ def handle_mqtt_message(client, userdata, message):
     time = datetime.now()
     if topic.split('/')[1] == 'SensorsData':
         data = {
-            "deviceID": deviceID,
-            "time": time,
-            "temp": float(mqttData[0]),
-            "humi": float(mqttData[1]),
+            "device_id": deviceID,
+            "data_time": time,
+            "data_temp": float(mqttData[0]),
+            "data_humi": float(mqttData[1]),
         }
         databaseAccess.insertCollectionItem(collectionList['SensorsData'], data)
 
