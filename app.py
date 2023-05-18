@@ -17,7 +17,7 @@ connectionString = "mongodb+srv://19522437:trinhtrung12@kltn-refrigerator.qbihwd
 collectionList = {
     "User":"",
     "Device":"",
-    "SersorsData":"",
+    "SensorsData":"",
     "Rating":"",
     "Dish":"",
     "Ingredient":"",
