@@ -1,5 +1,7 @@
+from threading import Thread, Lock
 from  werkzeug.security import generate_password_hash, check_password_hash
-from flask import Flask, jsonify, make_response, request
+from flask import Flask, jsonify, make_response, render_template, request
+from flask_socketio import SocketIO, emit
 from bson import json_util
 import databaseAccess
 import json
@@ -29,12 +31,46 @@ collectionList = {
 for item in collectionList:
     collectionList[item] = databaseAccess.accessCollection(connectionString, "RefrigeratorManagement", item)
 
+# config web socket parameters
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'secret!'
+socketio = SocketIO(app)
+thread = None
+thread_lock = Lock()
+
+
 # config Flespi Broker parameters
 app.config['MQTT_BROKER_URL'] = 'mqtt.flespi.io'
 app.config['MQTT_BROKER_PORT'] = 1883
 app.config['MQTT_USERNAME'] = 'XYwy6gDl0Y76a9C5vl18YJtp0RxQzkYm8iJ3occc078Z6BUqKLmzkGM8l9OLiAVe'
 app.config['MQTT_PASSWORD'] = ''
 mqtt = Mqtt(app)
+
+# Web Socket handle
+
+def background_thread():
+    print("Thread start")
+    while True:
+        data = []
+        limitItems = 10
+        itemsCount = databaseAccess.countCollectionItems(collectionList['SensorsData'])
+        if(itemsCount < limitItems):
+            data = databaseAccess.getTopCollectionItem(collectionList['SensorsData'], itemsCount)
+        else:
+            data = databaseAccess.getTopCollectionItem(collectionList['SensorsData'], limitItems)
+        emit('sensorsDataList', json.loads(json_util.dumps(data)))
+        print("emit done")
+        socketio.sleep(10)
+
+@socketio.on('connect')
+def handle_socketio_connect():
+    background_thread()
+    print("Connected") 
+
+@socketio.on('client event')
+def test_connect(data):
+    print("Received client event: ")
+    print(data)
 
 # MQTT events handle
 
@@ -64,7 +100,7 @@ def handle_mqtt_message(client, userdata, message):
 
 @app.route('/')
 def hello():
-    return "Hello tủ lạnh siêu thông minh!"
+    return render_template('index.html', async_mode=socketio.async_mode)
 
 @app.route('/SensorsData', methods = ['GET'])
 def handle_requests():
@@ -195,4 +231,5 @@ def handle_rating():
 
 
 if __name__ == '__main__':
-   app.run(debug = True)
+#    app.run(debug = True)
+   socketio.run(app)

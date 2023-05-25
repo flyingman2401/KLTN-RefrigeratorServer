@@ -5,3 +5,4 @@ pymongo
 PyJWT
 werkzeug
 flask_mqtt
+flask-socketio
