@@ -243,9 +243,10 @@ def handle_recommend_survey():
             listIngredient = databaseAccess.listCollectionItem(collectionList['Ingredient'], {})
             return make_response(listIngredient, 200)
         if (args.get("action", type=int) == 2):
-            igdList = request.get_json
+            igdList = request.get_json()
+            print(igdList)
             specificDishes = surveyAPI.getSpecificDish(igdList, collectionList["Dish"])
-            return make_response(listIngredient, 200)
+            return make_response(specificDishes, 200)
 
 
 if __name__ == '__main__':
