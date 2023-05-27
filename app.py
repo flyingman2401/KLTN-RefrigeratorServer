@@ -2,6 +2,7 @@ from threading import Thread, Lock
 from  werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask, jsonify, make_response, render_template, request
 from flask_socketio import SocketIO, emit
+from flask_cors import CORS, cross_origin
 from bson import json_util
 import databaseAccess
 import json
@@ -12,6 +13,7 @@ from datetime import datetime
 
 
 app = Flask(__name__)
+CORS(app, support_credentials=True)
 app.config['SECRET_KEY'] = 'Refrigerator'
 
 # define mongoDB cloud connection string
@@ -230,6 +232,7 @@ def handle_rating():
             return make_response('Khong the thuc hien!', 500)
 
 @app.route('/RecommendSurvey', methods = ['GET'])
+@cross_origin(supports_credentials=True)
 def handle_recommend_survey():
     if (request.method == 'GET'):
         args = request.args
