@@ -207,7 +207,7 @@ def handle_food_management():
 
 @app.route('/Rating', methods = ['POST', 'PUT'])
 def handle_rating():    
-    if (request.method == 'POST'):
+    if (request.method == 'GET'):
         data = request.get_json()
         x = foodManage.rateDish(
             collectionList['Rating'],
@@ -228,6 +228,16 @@ def handle_rating():
             return make_response('Thanh cong!', 200)
         else:
             return make_response('Khong the thuc hien!', 500)
+
+@app.route('/RecommendSurvey', methods = ['GET'])
+def handle_recommend_survey():
+    if (request.method == 'GET'):
+        args = request.args
+
+        # action 1: get list of ingredients inside fridge
+        if (args.get("action", type=int) == 1):
+            listIngredient = databaseAccess.listCollectionItem(collectionList['Ingredient'], {})
+            return make_response(listIngredient, 200)
 
 
 if __name__ == '__main__':
