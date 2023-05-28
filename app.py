@@ -268,7 +268,18 @@ def handle_recommend_survey():
             ),
             listRcmDish = surveyAPI.getListRecommedationDish(surveyCollectionList['SurveyRcmDish'], collectionList['Dish'], selectedDish)
             return make_response(listRcmDish, 200)
+        
+        
 
+@app.route('/RecommendSurvey/GetDish', methods = ['GET'])
+@cross_origin(supports_credentials=True)
+def handle_recommend_survey_get_dish():
+    if (request.method == 'GET'):
+        igdList = request.get_json()
+        print(igdList)
+        specificDishes = surveyAPI.getSpecificDish(igdList, collectionList["Dish"])
+        surveyAPI.saveSelectedIgd(igdList, surveyCollectionList['SurveySelectedIgd'])
+        return make_response(specificDishes, 200)
 
 if __name__ == '__main__':
    app.run(debug = True)
