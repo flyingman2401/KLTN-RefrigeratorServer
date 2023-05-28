@@ -8,7 +8,12 @@ def getSpecificDish(igdList, dishCol):
         for dish in dishList:
             for igd in dish["dish_ingredients"]:
                 if (igd[0] == selectedigd):
-                    specificDishes.append(dish)
+                    data = {
+                        "id": dish["id"],
+                        "dish_name": dish["dish_name"],
+                        "dish_image": dish["dish_image"]
+                    }
+                    specificDishes.append(data)
                     break
 
     print(specificDishes)
