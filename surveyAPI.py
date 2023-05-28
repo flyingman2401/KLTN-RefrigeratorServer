@@ -53,6 +53,8 @@ def saveSelectedIgd(igdList, surveyIgdCol):
 
 def getListRecommedationDish (rcmCol, dishCol, selectedDish):
     listRcmDish = []
+    totalRcmDish = listRcmDish + selectedDish
+    print(totalRcmDish)
     listRcm = databaseAccess.listCollectionItem(rcmCol, {}, "weight", -1)
     
     for item in listRcm:
@@ -62,6 +64,17 @@ def getListRecommedationDish (rcmCol, dishCol, selectedDish):
             "dish_image": dishItem["dish_image"],
             "weight": item["weight"],
             "isSelected": True if item["dish_id"] in selectedDish else False
+        }
+        totalRcmDish.remove(item["dish_id"])
+        listRcmDish.append(data)
+
+    for id in totalRcmDish:
+        dishItem = databaseAccess.findCollectionItem(dishCol, {"id": id})
+        data = {
+            "dish_name": dishItem["dish_name"],
+            "dish_image": dishItem["dish_image"],
+            "weight": 0,
+            "isSelected": True
         }
         listRcmDish.append(data)
 
