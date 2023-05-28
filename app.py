@@ -240,7 +240,7 @@ def handle_recommend_survey():
 
         # action 1: get list of ingredients inside fridge
         if (args.get("action", type=int) == 1):
-            listIngredient = databaseAccess.listCollectionItem(collectionList['Ingredient'], {})
+            listIngredient = surveyAPI.getIgdList(collectionList['Ingredient'])
             return make_response(listIngredient, 200)
         if (args.get("action", type=int) == 2):
             igdList = request.get_json()
