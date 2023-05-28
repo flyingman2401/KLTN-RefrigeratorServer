@@ -14,7 +14,8 @@ import surveyAPI
 
 
 app = Flask(__name__)
-CORS(app, support_credentials=True)
+cors = CORS(app, resources={r"/RecommendSurvey": {"origins": "*"}})
+app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['SECRET_KEY'] = 'Refrigerator'
 
 # define mongoDB cloud connection string
@@ -242,7 +243,7 @@ def handle_rating():
             return make_response('Khong the thuc hien!', 500)
 
 @app.route('/RecommendSurvey', methods = ['GET'])
-@cross_origin(supports_credentials=True)
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def handle_recommend_survey():
     if (request.method == 'GET'):
         args = request.args
