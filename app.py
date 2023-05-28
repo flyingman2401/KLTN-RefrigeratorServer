@@ -19,6 +19,7 @@ app.config['SECRET_KEY'] = 'Refrigerator'
 
 # define mongoDB cloud connection string
 connectionString = "mongodb+srv://19522437:trinhtrung12@kltn-refrigerator.qbihwdd.mongodb.net/test"
+
 collectionList = {
     "User":"",
     "Device":"",
@@ -33,6 +34,14 @@ collectionList = {
 }
 for item in collectionList:
     collectionList[item] = databaseAccess.accessCollection(connectionString, "RefrigeratorManagement", item)
+
+surveyCollectionList = {
+    "SurveySelectedIgd":"",
+    "SurveyRcmDish":"",
+    "SurveyRcmMeal":""
+}
+for item in surveyCollectionList:
+    surveyCollectionList[item] = databaseAccess.accessCollection(connectionString, "SurveyData", item)
 
 # config web socket parameters
 # app = Flask(__name__)
@@ -246,7 +255,19 @@ def handle_recommend_survey():
             igdList = request.get_json()
             print(igdList)
             specificDishes = surveyAPI.getSpecificDish(igdList, collectionList["Dish"])
+            surveyAPI.saveSelectedIgd(igdList, surveyCollectionList['SurveySelectedIgd'])
             return make_response(specificDishes, 200)
+        if (args.get("action", type=int) == 3):
+            selectedDish = request.get_json()
+            foodRcm.updateRcmDish(
+                collectionList['Dish'],
+                surveyCollectionList['SurveySelectedIgd'],
+                surveyCollectionList['SurveyRcmDish'],
+                collectionList['Rating'],
+                "ANYNOMOUS001"
+            ),
+            listRcmDish = surveyAPI.getListRecommedationDish(surveyCollectionList['SurveyRcmDish'], collectionList['Dish'], selectedDish)
+            return make_response(listRcmDish, 200)
 
 
 if __name__ == '__main__':
