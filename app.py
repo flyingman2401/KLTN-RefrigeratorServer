@@ -14,11 +14,15 @@ import surveyAPI
 
 
 app = Flask(__name__)
-CORS(app,
-  resources={r'/*': {'origins': '*'}},
-  supports_credentials=True
+CORS(
+    app, 
+    origins=['*'], 
+    methods=['GET', 'POST', 'OPTIONS'], 
+    allow_headers=['application/json; charset=utf-8'],
+    supports_credentials=True,
+    resources={r"/*": {"origins": "*"}}
 )
-app.config['CORS_HEADERS'] = 'Content-Type'
+# app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['SECRET_KEY'] = 'Refrigerator'
 
 # define mongoDB cloud connection string
@@ -245,7 +249,8 @@ def handle_rating():
         else:
             return make_response('Khong the thuc hien!', 500)
 
-@app.route('/RecommendSurvey', methods = ['GET'])
+@app.route('/RecommendSurvey', methods = ['GET', 'POST'])
+@cross_origin(support_credentials=True)
 def handle_recommend_survey():
     if (request.method == 'GET'):
         args = request.args
@@ -253,17 +258,15 @@ def handle_recommend_survey():
         # action 1: get list of ingredients inside fridge
         if (args.get("action", type=int) == 1):
             listIngredient = surveyAPI.getIgdList(collectionList['Ingredient'])
-            response = jsonify(listIngredient)
-            response.headers.add("Access-Control-Allow-Origin", "*")
-            return response
+            return make_response(listIngredient, 200)
+        
+    elif (request.method == 'POST'):
         if (args.get("action", type=int) == 2):
             igdList = request.get_json()
             print(igdList)
             specificDishes = surveyAPI.getSpecificDish(igdList, collectionList["Dish"])
             surveyAPI.saveSelectedIgd(igdList, surveyCollectionList['SurveySelectedIgd'])
-            response = jsonify(specificDishes)
-            response.headers.add("Access-Control-Allow-Origin", True)
-            return response
+            return make_response(specificDishes, 200)
         if (args.get("action", type=int) == 3):
             selectedDish = request.get_json()
             foodRcm.updateRcmDish(
@@ -276,6 +279,6 @@ def handle_recommend_survey():
             listRcmDish = surveyAPI.getListRecommedationDish(surveyCollectionList['SurveyRcmDish'], collectionList['Dish'], selectedDish)
             return make_response(listRcmDish, 200)
         
+        
 if __name__ == '__main__':
    app.run(debug = True)
-#    socketio.run(app)
