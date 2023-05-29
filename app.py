@@ -261,6 +261,8 @@ def handle_recommend_survey():
             return make_response(listIngredient, 200)
         
     elif (request.method == 'POST'):
+        args = request.args
+        
         if (args.get("action", type=int) == 2):
             igdList = request.get_json()
             print(igdList)
