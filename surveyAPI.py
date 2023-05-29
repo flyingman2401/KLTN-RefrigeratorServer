@@ -57,7 +57,10 @@ def getListRecommedationDish (rcmCol, dishCol, selectedDish):
     listRcmID = []
     for item in listRcm:
         listRcmID.append(item["dish_id"])
-    totalRcmDish = [*listRcmID, *selectedDish]
+    totalRcmDish = [*listRcmID]
+    for item in selectedDish:
+        if item not in totalRcmDish:
+            totalRcmDish.append(item)
     print(totalRcmDish)
     
     for item in listRcm:
