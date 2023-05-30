@@ -5,16 +5,18 @@ def getSpecificDish(igdList, dishCol):
     dishList = databaseAccess.listCollectionItem(dishCol, {})
 
     specificDishes = []
+    specificDishesID = []
     for selectedigd in igdList:
         for dish in dishList:
             for igd in dish["dish_ingredients"]:
-                if (igd[0] == selectedigd["id"]):
+                if (igd[0] == selectedigd["id"]) and (dish["id"] not in specificDishesID):
                     data = {
                         "id": dish["id"],
                         "dish_name": dish["dish_name"],
                         "dish_image": dish["dish_image"]
                     }
                     specificDishes.append(data)
+                    specificDishesID.append(dish["id"])
                     break
 
     print(specificDishes)
