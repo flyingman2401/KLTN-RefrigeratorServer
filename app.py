@@ -124,7 +124,7 @@ def handle_mqtt_message(client, userdata, message):
 
 @app.route('/')
 def hello():
-    return datetime.now(timezone)
+    return datetime.now(timezone).hour
 
 @app.route('/SensorsData', methods = ['GET'])
 def handle_requests():
