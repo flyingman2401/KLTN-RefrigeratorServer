@@ -124,7 +124,7 @@ def handle_mqtt_message(client, userdata, message):
 
 @app.route('/')
 def hello():
-    return "Chào!"
+    return datetime.now(timezone)
 
 @app.route('/SensorsData', methods = ['GET'])
 def handle_requests():
@@ -287,6 +287,4 @@ def handle_recommend_survey():
         
         
 if __name__ == '__main__':
-   time = datetime.now(timezone)
-   print(time)
    app.run(debug = True)
