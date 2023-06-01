@@ -7,3 +7,4 @@ werkzeug
 flask_mqtt
 flask-socketio
 flask-cors
+pytz

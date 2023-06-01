@@ -10,9 +10,10 @@ import foodRcm
 import foodManage
 from flask_mqtt import Mqtt
 from datetime import datetime
+import pytz
 import surveyAPI
 
-
+timezone = pytz.timezone('Asia/Ho_Chi_Minh')
 app = Flask(__name__)
 CORS(
     app, 
@@ -106,7 +107,8 @@ def handle_mqtt_message(client, userdata, message):
     topic = message.topic
     deviceID = topic.split('/')[0]
     mqttData = message.payload.decode().split(" ")
-    time = datetime.now()
+    time = datetime.now(timezone)
+    print(time)
     if topic.split('/')[1] == 'SensorsData':
         data = {
             "device_id": deviceID,
