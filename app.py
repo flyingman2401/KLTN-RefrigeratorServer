@@ -100,7 +100,9 @@ def handle_connect(client, userdata, flags, rc):
     devicesList = databaseAccess.listCollectionItem(collectionList['Device'], {})
     for device in devicesList:
         mqtt.subscribe(device['id'] + '/SensorsData')
-    print("MQTT Broker Connected")
+    time = datetime.now(timezone)
+    print(time)
+    print("MQTT Broker Connected ")
 
 @mqtt.on_message()
 def handle_mqtt_message(client, userdata, message):
