@@ -287,4 +287,6 @@ def handle_recommend_survey():
         
         
 if __name__ == '__main__':
+   time = datetime.now(timezone)
+   print(time)
    app.run(debug = True)
