@@ -174,23 +174,12 @@ def handle_food_management():
         
         # action 2: get list of recommendation dishes
         elif (args.get("action", type=int) == 2):
-            # listRcmDish = foodManage.getListRecommedationDish(
-            #     collectionList['RecommendationDish'], 
-            #     collectionList['Dish'], 
-            #     collectionList['Ingredient'],
-            #     collectionList['DishType']
-            # )
-            listRcmDish = databaseAccess.listCollectionItem(collectionList['RecommendationDish'], {})
+            listRcmDish = databaseAccess.listCollectionItem(collectionList['RecommendationDish'], {}, "weight", -1)
             return make_response(listRcmDish, 200)
         
         # action 3: get list of recommendation meal
         elif (args.get("action", type=int) == 3):
-            listRcmMeal = foodManage.getListRecommedationMeal(
-                collectionList['RecommendationMeal'], 
-                collectionList['Dish'], 
-                collectionList['Ingredient'],
-                collectionList['DishType']
-            )
+            listRcmMeal = databaseAccess.listCollectionItem(collectionList['RecommendationMeal'], {}, "weight", -1)
             return make_response(listRcmMeal, 200)
         
         else:
