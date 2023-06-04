@@ -169,10 +169,11 @@ def handle_food_management():
 
         # action 1: get list of ingredients inside fridge
         if (args.get("action", type=int) == 1):
-            listIngredient = foodManage.getListIngredientInsideFridge(
-                collectionList['IngredientInsideFridge'],
-                collectionList['Ingredient']
-            )
+            # listIngredient = foodManage.getListIngredientInsideFridge(
+            #     collectionList['IngredientInsideFridge'],
+            #     collectionList['Ingredient']
+            # )
+            listIngredient = databaseAccess.listCollectionItem(collectionList['IngredientInsideFridge'], {})
             return make_response(listIngredient, 200)
         
         # action 2: get list of recommendation dishes
