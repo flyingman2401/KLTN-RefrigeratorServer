@@ -76,7 +76,7 @@ def getListRecommedationMeal (rcmCol, dishCol, ingredientCol, typeCol):
 
     return listRcmMeal    
 
-def rateDish (mycol, data):
+def rateDish(mycol, data):
     filter = {
         'user_id': data['user_id'],
         'dish_id': data['dish_id']

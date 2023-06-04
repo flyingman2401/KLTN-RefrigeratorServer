@@ -229,6 +229,25 @@ def handle_food_management():
         else:
             return make_response('Khong the thuc hien!', 500)
 
+@app.route('/FoodData', methods = ['GET'])
+def handle_get_food_data():
+    if (request.method == 'GET'):
+        args = request.args
+
+        # action 1: get list of ingredients
+        if (args.get("action", type=int) == 1):
+            listIngredient = databaseAccess.listCollectionItem(collectionList['Ingredient'], {})
+            return make_response(listIngredient, 200)
+        # action 2: get list of dishes
+        elif (args.get("action", type=int) == 2):
+            listDish = databaseAccess.listCollectionItem(collectionList['Dish'], {})
+            return make_response(listDish, 200)
+        # action 1: get list of dish types
+        elif (args.get("action", type=int) == 3):
+            listDishType = databaseAccess.listCollectionItem(collectionList['DishType'], {})
+            return make_response(listDishType, 200)
+
+
 @app.route('/Rating', methods = ['POST', 'PUT'])
 def handle_rating():    
     if (request.method == 'GET'):
