@@ -237,7 +237,7 @@ def handle_get_food_data():
 
 @app.route('/Rating', methods = ['POST', 'PUT'])
 def handle_rating():    
-    if (request.method == 'GET'):
+    if (request.method == 'POST'):
         data = request.get_json()
         x = foodManage.rateDish(
             collectionList['Rating'],
