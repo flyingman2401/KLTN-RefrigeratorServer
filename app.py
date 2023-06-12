@@ -126,6 +126,30 @@ def handle_mqtt_message(client, userdata, message):
 def hello():
     return str(datetime.now(timezone).hour)
 
+@app.route('/UserData', methods = ['GET', 'POST', 'PUT'])
+def handle_user():
+    if request.method == 'GET':
+        data = request.get_json()
+        filter = {
+            "id": data['user_id']
+        }
+        userData = databaseAccess.findCollectionItem(collectionList['User'], filter)
+        print(userData)
+        if (userData):
+            return make_response(json_util.dumps(userData), 200)
+        else:
+            return make_response("Không tồn tại người dùng", 404)
+    if request.method == 'PUT':
+        data = request.get_json()
+        filter = {
+            "id": data['user_id']
+        }
+        userData = databaseAccess.findCollectionItem(collectionList['User'], filter)
+        if (userData == None):
+            return make_response("Không tồn tại người dùng", 404)
+        databaseAccess.updateCollectionItem(collectionList['User'], filter, data)
+        return make_response("Cập nhật thành công dữ liệu người dùng!", 200)
+    
 @app.route('/SensorsData', methods = ['GET'])
 def handle_requests():
     if request.method == 'GET':
@@ -233,7 +257,6 @@ def handle_get_food_data():
         elif (args.get("action", type=int) == 3):
             listDishType = databaseAccess.listCollectionItem(collectionList['DishType'], {})
             return make_response(listDishType, 200)
-
 
 @app.route('/Rating', methods = ['POST', 'PUT'])
 def handle_rating():    
