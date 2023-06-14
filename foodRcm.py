@@ -487,6 +487,7 @@ def RecommendMeals(now, userID):
 
         # Final weight of recommended meal
         weightMeal = 0.5 * weightIngredient + 0.2 * weightDisease + 0.2 * weightNutrient +  0.1 * weightRating
+        print(weightMeal)
 
         if (weightMeal > 0):
             mealInfos[mealID] = {
@@ -500,8 +501,10 @@ def RecommendMeals(now, userID):
                 "user_id": userID,
                 "weight": round(weightMeal, 3)
             }
-            # print(jsonData)
+            print(jsonData)
             databaseAccess.insertCollectionItem(collectionList['RecommendationMeal'], jsonData)
+        else:
+            print("Không đủ nguyên liệu để tạo thành bữa ăn!")
 
     return mealInfos
 
