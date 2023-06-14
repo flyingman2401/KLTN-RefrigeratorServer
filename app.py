@@ -1,7 +1,6 @@
 from threading import Thread, Lock
 from  werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask, jsonify, make_response, render_template, request
-from flask_socketio import SocketIO, emit
 from flask_cors import CORS, cross_origin
 from bson import json_util
 import databaseAccess
@@ -40,7 +39,8 @@ collectionList = {
     "IngredientInsideFridge":"", 
     "RecommendationDish":"",
     "RecommendationMeal":"",
-    "Disease": ""
+    "Disease": "",
+    "History": "",
 }
 for item in collectionList:
     collectionList[item] = databaseAccess.accessCollection(connectionString, "RefrigeratorManagement", item)
@@ -53,46 +53,12 @@ surveyCollectionList = {
 for item in surveyCollectionList:
     surveyCollectionList[item] = databaseAccess.accessCollection(connectionString, "SurveyData", item)
 
-# config web socket parameters
-# app = Flask(__name__)
-# app.config['SECRET_KEY'] = 'secret!'
-# socketio = SocketIO(app)
-# thread = None
-# thread_lock = Lock()
-
-
 # config Flespi Broker parameters
 app.config['MQTT_BROKER_URL'] = 'mqtt.flespi.io'
 app.config['MQTT_BROKER_PORT'] = 1883
 app.config['MQTT_USERNAME'] = 'XYwy6gDl0Y76a9C5vl18YJtp0RxQzkYm8iJ3occc078Z6BUqKLmzkGM8l9OLiAVe'
 app.config['MQTT_PASSWORD'] = ''
 mqtt = Mqtt(app)
-
-# Web Socket handle
-
-# def background_thread():
-#     print("Thread start")
-#     while True:
-#         data = []
-#         limitItems = 10
-#         itemsCount = databaseAccess.countCollectionItems(collectionList['SensorsData'])
-#         if(itemsCount < limitItems):
-#             data = databaseAccess.getTopCollectionItem(collectionList['SensorsData'], itemsCount)
-#         else:
-#             data = databaseAccess.getTopCollectionItem(collectionList['SensorsData'], limitItems)
-#         emit('sensorsDataList', json.loads(json_util.dumps(data)))
-#         print("emit done")
-#         socketio.sleep(10)
-
-# @socketio.on('connect')
-# def handle_socketio_connect():
-#     background_thread()
-#     print("Connected") 
-
-# @socketio.on('client event')
-# def test_connect(data):
-#     print("Received client event: ")
-#     print(data)
 
 # MQTT events handle
 
@@ -275,6 +241,18 @@ def handle_rating():
             return make_response('Thanh cong!', 200)
         else:
             return make_response('Khong the thuc hien!', 500)
+
+@app.route('/History', methods = ['POST'])
+def handle_history():
+    if (request.method == 'POST'):
+        data = request.get_json()
+        x = foodManage.saveDishHistory(collectionList['History'], data)
+
+        if (x):
+            return make_response('Thanh cong!', 200)
+        else:
+            return make_response('Khong the thuc hien!', 500)
+
 
 @app.route('/RecommendSurvey', methods = ['GET', 'POST'])
 @cross_origin(support_credentials=True)

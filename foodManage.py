@@ -88,3 +88,12 @@ def rateDish(mycol, data):
     else:
         x = databaseAccess.updateCollectionItem(mycol, filter, {'rating': data['rating']})
         return x
+
+def saveDishHistory(mycol, data):
+    data = {
+        'user_id': data['user_id'],
+        'dish_id': data['dish_id'],
+        'history_date':  data['history_date'],
+    }
+    x = databaseAccess.insertCollectionItem(mycol, data)
+    return x
