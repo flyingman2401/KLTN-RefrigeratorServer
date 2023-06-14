@@ -45,3 +45,10 @@ def emptyCollection(mycol, filter):
 def getTopCollectionItem(mycol, n):
     items = mycol.find(sort =[('_id', pymongo.DESCENDING)]).limit(n)
     return items
+
+def getColumnInCollection(mycol, columnName, filter):
+    listFilter = []
+    list = listCollectionItem(mycol, filter)
+    for record in list:
+        listFilter.append(record[columnName])
+    return listFilter
