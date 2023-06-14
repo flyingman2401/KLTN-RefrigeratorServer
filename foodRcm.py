@@ -311,7 +311,7 @@ def CalculateNutrientWeight(now, userInfo, dishIDs, chosenIngredientList):
 
     return round(weightNutrient, 5), actualNutrient, chosenIngredientWithMassList
 
-def CalculateRatingWeight(dishIDs, userID):
+def CalculateRatingWeight(now, dishIDs, userID):
     weightRating = 0
     for dishID in dishIDs:
         ratingInfo = databaseAccess.findCollectionItem(collectionList['Rating'], {"user_id": userID, "dish_id": dishID})
@@ -321,7 +321,11 @@ def CalculateRatingWeight(dishIDs, userID):
             }
         weightRating += ratingInfo['rating']
     
-    weightRating /= 3
+    # Nếu là buổi sáng thì chia 2, các buổi khác chia 3
+    if (now.hour < morningNoticeHour or now.hour >= eveningNoticeHour):
+        weightRating /= 2
+    else:
+        weightRating /= 3
 
     return round(weightRating, 5)
 
@@ -351,9 +355,11 @@ def RecommendMeals(now, userID):
         # chosenIngredientWithMassList : {'MEA004': 100, 'MEA007': 100, 'VEG023': 50, 'VEG024': 50, 'VEG026': 200, 'VEG007': 200}
         
         # weight rating
-        weightRating = CalculateRatingWeight(dishIDs, userID)
-        weightRating = 1
-
+        weightRating = CalculateRatingWeight(now, dishIDs, userID)
+        print(weightIngredient, chosenIngredientList, expiredIngredients)
+        print(weightDisease, unhealthyDishesInMeal)
+        print(weightNutrient, actualNutrient, chosenIngredientWithMassList)
+        print(weightRating)
         # Final weight of recommended meal
         weightMeal = 0.5 * weightIngredient + 0.2 * weightDisease + 0.2 * weightNutrient +  0.1 * weightRating
         print(weightMeal)

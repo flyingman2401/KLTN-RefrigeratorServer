@@ -253,6 +253,26 @@ def handle_history():
         else:
             return make_response('Khong the thuc hien!', 500)
 
+@app.route('/Recommendation', methods = ['GET'])
+def handle_recommend():
+    if (request.method == 'GET'):
+        args = request.args
+        data = request.get_json()
+        # action 1: get list of dishes
+        if (args.get("action", type=int) == 1):
+            time = datetime.now(timezone)
+            foodRcm.collectionList = collectionList
+            foodRcm.RecommendDishes(time, data['user_id'])
+            listRcmDish = databaseAccess.listCollectionItem(collectionList['RecommendationDish'], {}, "weight", -1)
+            return make_response(listRcmDish, 200)
+        # action 2: get list of meals
+        elif (args.get("action", type=int) == 2):
+            time = datetime.now(timezone)
+            foodRcm.collectionList = collectionList
+            foodRcm.RecommendMeals(time, data['user_id'])
+            listRcmMeal = databaseAccess.listCollectionItem(collectionList['RecommendationMeal'], {}, "weight", -1)
+            return make_response(listRcmMeal, 200)
+
 
 @app.route('/RecommendSurvey', methods = ['GET', 'POST'])
 @cross_origin(support_credentials=True)
