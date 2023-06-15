@@ -246,19 +246,20 @@ def handle_history():
 def handle_recommend():
     if (request.method == 'GET'):
         args = request.args
-        data = request.get_json()
+        # data = request.get_json()
         # action 1: get list of dishes
         if (args.get("action", type=int) == 1):
             time = datetime.now(timezone)
             foodRcm.collectionList = collectionList
-            foodRcm.RecommendDishes(time, data['user_id'])
+            foodRcm.RecommendDishes(time, "USER001")
             listRcmDish = databaseAccess.listCollectionItem(collectionList['RecommendationDish'], {}, "weight", -1)
             return make_response(listRcmDish, 200)
         # action 2: get list of meals
         elif (args.get("action", type=int) == 2):
             time = datetime.now(timezone)
             foodRcm.collectionList = collectionList
-            foodRcm.RecommendMeals(time, data['user_id'])
+            foodRcm.RecommendDishes(time, "USER001")
+            foodRcm.RecommendMeals(time, "USER001")
             listRcmMeal = databaseAccess.listCollectionItem(collectionList['RecommendationMeal'], {}, "weight", -1)
             return make_response(listRcmMeal, 200)
 
