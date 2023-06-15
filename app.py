@@ -239,8 +239,7 @@ def handle_history():
         else:
             return make_response('Khong the thuc hien!', 500)
     elif (request.method == 'GET'):
-        data = request.get_json()
-        historyList = databaseAccess.listCollectionItem(collectionList['History'], {'user_id': data['user_id']})
+        historyList = databaseAccess.listCollectionItem(collectionList['History'], {'user_id': "USER001"})
         return make_response(historyList, 200)
 
 @app.route('/Recommendation', methods = ['GET'])
