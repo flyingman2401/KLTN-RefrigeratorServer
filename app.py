@@ -137,24 +137,10 @@ def handle_food_management():
         x = databaseAccess.insertCollectionItem(collectionList['IngredientInsideFridge'], data)
         if (x):
             time = datetime.now(timezone)
+            time = time.replace(hour=10)
             foodRcm.collectionList = collectionList
             foodRcm.RecommendDishes(time, data['user_id'])
             foodRcm.RecommendMeals(time, data['user_id'])
-            # foodRcm.updateRcmDish(
-            #     collectionList['Dish'],
-            #     collectionList['IngredientInsideFridge'],
-            #     collectionList['RecommendationDish'],
-            #     collectionList['Rating'],
-            #     data['user_id']
-            # ),
-            # foodRcm.updateRcmMeal(
-            #     collectionList['Dish'],
-            #     collectionList['IngredientInsideFridge'],
-            #     collectionList['RecommendationDish'],
-            #     collectionList['RecommendationMeal'],
-            #     collectionList['Rating'],
-            #     data['user_id']
-            # )
             return make_response('Thanh cong!', 200)
         else:
             return make_response('Khong the thuc hien!', 500)
@@ -242,7 +228,7 @@ def handle_rating():
         else:
             return make_response('Khong the thuc hien!', 500)
 
-@app.route('/History', methods = ['POST'])
+@app.route('/History', methods = ['GET', 'POST'])
 def handle_history():
     if (request.method == 'POST'):
         data = request.get_json()
@@ -252,6 +238,10 @@ def handle_history():
             return make_response('Thanh cong!', 200)
         else:
             return make_response('Khong the thuc hien!', 500)
+    elif (request.method == 'GET'):
+        data = request.get_json()
+        historyList = databaseAccess.listCollectionItem(collectionList['History'], {'user_id': data['user_id']})
+        return make_response(historyList, 200)
 
 @app.route('/Recommendation', methods = ['GET'])
 def handle_recommend():

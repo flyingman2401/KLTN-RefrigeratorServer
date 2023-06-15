@@ -3,12 +3,34 @@ import datetime
 import pytz
 
 def RecommendDishes(now, userID):
-    databaseAccess.emptyCollection(collectionList['RecommendationDish'], {})
+    databaseAccess.emptyCollection(collectionList['RecommendationDish'], {"user_id": userID})
     dishList = databaseAccess.listCollectionItem(collectionList['Dish'], {})
     ingredientIFList_ID = databaseAccess.getColumnInCollection(collectionList['IngredientInsideFridge'], 'ingredient_id', {"user_id": userID})
   
-    # Traverse the ingredients of all over dishes
-    for dish in dishList:
+    today = now.date() 
+
+    dishesEatenWithin2Days = [] 
+    # Tìm tất cả dish trong 2 ngày gần đây 
+    historyDishes = databaseAccess.listCollectionItem(collectionList['History'], {"user_id": userID}) 
+    for historyDish in historyDishes: 
+        history_date = datetime.datetime.strptime(historyDish['history_date'], '%Y-%m-%d').date() 
+        if ((today - history_date).days < 2): 
+            dishesEatenWithin2Days.append(historyDish['dish_id']) 
+
+    # Traverse the ingredients of all over dishes 
+    for dish in dishList: 
+        # Nếu đã ăn trong 2 ngày gần đây thì bỏ qua món này 
+        if (dish['id'] in dishesEatenWithin2Days): 
+            continue 
+        # Nếu là buổi sáng thì bỏ qua các món ăn bình thường 
+        if (now.hour < morningNoticeHour or now.hour >= eveningNoticeHour): 
+            if (dish['dishtype_id'] in [0, 1, 2]): 
+                continue 
+        # Hoặc nếu không phải buổi sáng thì bỏ qua các món buổi sáng 
+        else: 
+            if (dish['dishtype_id'] in [3, 4]): 
+                continue
+            
         weightIngredient = 0
         expiredIngredients = []
         # Check if the most important ingredient is available in refrigerator
@@ -21,7 +43,6 @@ def RecommendDishes(now, userID):
                     # Calculate the weight of exp
                     expDate = datetime.datetime.strptime(ingredientInfo['food_EXP'], '%Y-%m-%d').date()
                     prdDate = datetime.datetime.strptime(ingredientInfo['food_PRD'], '%Y-%m-%d').date()
-                    today = now.date()
 
                     totalUseDays = (expDate - prdDate).days - 1
                     remainingDays = (expDate - today).days
@@ -330,7 +351,7 @@ def CalculateRatingWeight(now, dishIDs, userID):
     return round(weightRating, 5)
 
 def RecommendMeals(now, userID):
-    databaseAccess.emptyCollection(collectionList['RecommendationMeal'], {})
+    databaseAccess.emptyCollection(collectionList['RecommendationMeal'], {"user_id": userID})
     userInfo = databaseAccess.findCollectionItem(collectionList['User'], {"id": userID})
     ingredientIFList_ID = databaseAccess.getColumnInCollection(collectionList['IngredientInsideFridge'], 'ingredient_id', {"user_id": userID})
     neededIngredientsOfMeals = GetNeededIngredientsOfMeals(now, userID)
