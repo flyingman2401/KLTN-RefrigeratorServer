@@ -13,7 +13,7 @@ import pytz
 import surveyAPI
 
 timezone = pytz.timezone('Asia/Ho_Chi_Minh')
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 CORS(
     app, 
     origins=['*'], 
