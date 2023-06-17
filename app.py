@@ -297,16 +297,16 @@ def handle_recommend_survey():
             return make_response(listRcmDish, 200)
 
 
-FLUTTER_WEB_APP = 'templates_2'
+FLUTTER_WEB_APP = 'templates/survey_app'
 
 @app.route('/SurveyApp')
 def render_page():
-    return render_template('templates_2/index.html')
+    return render_template('survey_app/index.html')
 
 
 @app.route('/web/')
 def render_page_web():
-    return render_template('templates_2/index.html')
+    return render_template('survey_app/index.html')
 
 
 @app.route('/web/<path:name>')
