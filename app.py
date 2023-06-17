@@ -1,6 +1,6 @@
 from threading import Thread, Lock
 from  werkzeug.security import generate_password_hash, check_password_hash
-from flask import Flask, jsonify, make_response, render_template, request
+from flask import Flask, jsonify, make_response, render_template, request, send_from_directory
 from flask_cors import CORS, cross_origin
 from bson import json_util
 import databaseAccess
@@ -295,6 +295,30 @@ def handle_recommend_survey():
             ),
             listRcmDish = surveyAPI.getListRecommedationDish(surveyCollectionList['SurveyRcmDish'], collectionList['Dish'], selectedDish)
             return make_response(listRcmDish, 200)
+
+
+FLUTTER_WEB_APP = 'templates_2'
+
+@app.route('/SurveyApp')
+def render_page():
+    return render_template('index.html')
+
+
+@app.route('/web/')
+def render_page_web():
+    return render_template('index.html')
+
+
+@app.route('/web/<path:name>')
+def return_flutter_doc(name):
+    datalist = str(name).split('/')
+    DIR_NAME = FLUTTER_WEB_APP
+
+    if len(datalist) > 1:
+        for i in range(0, len(datalist) - 1):
+            DIR_NAME += '/' + datalist[i]
+
+    return send_from_directory(DIR_NAME, datalist[-1])
         
         
 if __name__ == '__main__':
