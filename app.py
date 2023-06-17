@@ -301,12 +301,12 @@ FLUTTER_WEB_APP = 'templates_2'
 
 @app.route('/SurveyApp')
 def render_page():
-    return render_template('index.html')
+    return render_template('templates_2/index.html')
 
 
 @app.route('/web/')
 def render_page_web():
-    return render_template('index.html')
+    return render_template('templates_2/index.html')
 
 
 @app.route('/web/<path:name>')
