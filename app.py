@@ -91,7 +91,7 @@ def handle_mqtt_message(client, userdata, message):
 
 @app.route('/')
 def hello():
-    return "Chào bạn nhé - from FridgeIT with love <3"
+    return render_template('index.html')
 
 @app.route('/UserData', methods = ['GET', 'POST', 'PUT'])
 def handle_user():

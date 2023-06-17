@@ -1,10 +1,21 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
-<script type="text/javascript" charset="utf-8">
-    var socket = io();
-    socket.on('sensorsDataList', function(msg) {
-        socket.emit('client event', msg);
-    });
-    socket.on('connect', function() {
-        // socket.emit('my event', {data: "hello from client 2"});
-    });
-</script>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://code.jquery.com/jquery-3.7.0.slim.js"
+        integrity="sha256-7GO+jepT9gJe9LB4XFf8snVOjX3iYNb0FHYr5LI1N5c=" crossorigin="anonymous"></script>
+</head>
+
+<div class="container">
+    <div class="card">
+        <h1 class="title">Fridge IT</h1>
+        <p class="subtitle">Vui, khỏe, thông minh.</p>
+        <button class="btn">from trunghidro ft. nguyentb with love hihi &#60;3 </button>
+    </div>
+    <div class="blob"></div>
+</div>
