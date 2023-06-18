@@ -260,7 +260,6 @@ def handle_recommend():
         elif (args.get("action", type=int) == 2):
             time = datetime.now(timezone)
             foodRcm.collectionList = collectionList
-            foodRcm.RecommendDishes(time, "USER001")
             foodRcm.RecommendMeals(time, "USER001")
             listRcmMeal = databaseAccess.listCollectionItem(collectionList['RecommendationMeal'], {}, "weight", -1)
             return make_response(listRcmMeal, 200)
