@@ -211,6 +211,7 @@ def CalculateDiseaseWeight(now, userID, dishIDs):
 
     userInfo = databaseAccess.findCollectionItem(collectionList['User'], {"id": userID})
     # Nếu user không có bệnh thì trọng số bằng 1
+    print(userInfo)
     if (not userInfo["user_disease"]):
         return 1, []
 

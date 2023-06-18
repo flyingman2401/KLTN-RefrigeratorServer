@@ -48,7 +48,9 @@ for item in collectionList:
 surveyCollectionList = {
     "SurveySelectedIgd":"",
     "SurveyRcmDish":"",
-    "SurveyRcmMeal":""
+    "SurveyRcmMeal":"",
+    "SurveyHistory":"",
+    "SurveyUserInfo":"",
 }
 for item in surveyCollectionList:
     surveyCollectionList[item] = databaseAccess.accessCollection(connectionString, "SurveyData", item)
@@ -269,7 +271,7 @@ def handle_recommend():
 def handle_recommend_survey():
     if (request.method == 'GET'):
         args = request.args
-
+        
         # action 1: get list of ingredients inside fridge
         if (args.get("action", type=int) == 1):
             listIngredient = surveyAPI.getIgdList(collectionList['Ingredient'])
@@ -277,24 +279,58 @@ def handle_recommend_survey():
         
     elif (request.method == 'POST'):
         args = request.args
-        
+
+        if (args.get("action", type=int) == 1):
+            data = request.get_json()
+            x = databaseAccess.insertCollectionItem(surveyCollectionList['SurveyUserInfo'], data)
+            if x:
+                return make_response("OK", 200)
+
         if (args.get("action", type=int) == 2):
-            igdList = request.get_json()
-            print(igdList)
-            specificDishes = surveyAPI.getSpecificDish(igdList, collectionList["Dish"])
-            surveyAPI.saveSelectedIgd(igdList, surveyCollectionList['SurveySelectedIgd'])
-            return make_response(specificDishes, 200)
-        if (args.get("action", type=int) == 3):
-            selectedDish = request.get_json()
-            foodRcm.updateRcmDish(
-                collectionList['Dish'],
-                surveyCollectionList['SurveySelectedIgd'],
-                surveyCollectionList['SurveyRcmDish'],
-                collectionList['Rating'],
-                "ANYNOMOUS001"
-            ),
-            listRcmDish = surveyAPI.getListRecommedationDish(surveyCollectionList['SurveyRcmDish'], collectionList['Dish'], selectedDish)
+            data = request.get_json()
+            time = datetime.strptime(data['time'], '%Y-%m-%d %H:%M:%S')
+            userID = data['user_id']
+            igdList = data['ingredients']
+
+            newCollectionList = collectionList
+            newCollectionList['IngredientInsideFridge'] = surveyCollectionList['SurveySelectedIgd']
+            newCollectionList['RecommendationDish'] = surveyCollectionList['SurveyRcmDish']
+            newCollectionList['RecommendationMeal'] = surveyCollectionList['SurveyRcmMeal']
+            newCollectionList['History'] = surveyCollectionList['SurveyHistory']
+            newCollectionList['User'] = surveyCollectionList['SurveyUserInfo']
+
+            databaseAccess.removeManyCollectionItem(newCollectionList['IngredientInsideFridge'], {"user_id": data['user_id']})
+            
+            foodRcm.collectionList = newCollectionList
+            for igd in igdList:
+                databaseAccess.insertCollectionItem(newCollectionList['IngredientInsideFridge'], igd)
+            foodRcm.RecommendDishes(time, userID)
+            listRcmDish = databaseAccess.listCollectionItem(newCollectionList['RecommendationDish'], {"user_id": data['user_id']}, "weight", -1)
             return make_response(listRcmDish, 200)
+        
+        if (args.get("action", type=int) == 3):
+            data = request.get_json()
+            time = datetime.strptime(data['time'], '%Y-%m-%d %H:%M:%S')
+            userID = data['user_id']
+            igdList = data['ingredients']
+
+            newCollectionList = collectionList
+            newCollectionList['IngredientInsideFridge'] = surveyCollectionList['SurveySelectedIgd']
+            newCollectionList['RecommendationDish'] = surveyCollectionList['SurveyRcmDish']
+            newCollectionList['RecommendationMeal'] = surveyCollectionList['SurveyRcmMeal']
+            newCollectionList['History'] = surveyCollectionList['SurveyHistory']
+            newCollectionList['User'] = surveyCollectionList['SurveyUserInfo']
+
+            databaseAccess.removeManyCollectionItem(newCollectionList['IngredientInsideFridge'], {"user_id": data['user_id']})
+            
+            foodRcm.collectionList = newCollectionList
+            for igd in igdList:
+                databaseAccess.insertCollectionItem(newCollectionList['IngredientInsideFridge'], igd)
+            foodRcm.RecommendDishes(time, userID)
+            foodRcm.RecommendMeals(time, userID)
+            listRcmMeal = databaseAccess.listCollectionItem(newCollectionList['RecommendationMeal'], {"user_id": data['user_id']}, "weight", -1)
+            return make_response(listRcmMeal, 200)
+
 
 
 FLUTTER_WEB_APP = 'templates/survey_app'

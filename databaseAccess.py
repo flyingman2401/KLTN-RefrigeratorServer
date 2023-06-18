@@ -16,6 +16,10 @@ def removeCollectionItem(mycol, data):
     x = mycol.delete_one(data)
     return x
 
+def removeManyCollectionItem(mycol, filter):
+    x = mycol.delete_many(filter)
+    return x
+
 def updateCollectionItem(mycol, query, value):
     x = mycol.update_one(query, {"$set": value})
     return x
