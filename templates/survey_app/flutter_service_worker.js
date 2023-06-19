@@ -3,7 +3,7 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "assets/AssetManifest.json": "fdc3205388a03ef275c911bd7f034fee",
+  "assets/AssetManifest.json": "75abc90c1445582e6502dcb90cf365a2",
 "assets/FontManifest.json": "80ee7aa8e2a97688adc3a79f4c13a61c",
 "assets/fonts/MaterialIcons-Regular.otf": "e7069dfd19b331be16bed984668fe080",
 "assets/lib/asserts/app_icon/icon.png": "9274662457e48aad71c41b161f9ede55",
@@ -30,10 +30,10 @@ const RESOURCES = {
 "assets/lib/asserts/general_asserts/humidity.svg": "53d4dc408c31275ad07d7771b213d6df",
 "assets/lib/asserts/general_asserts/lightbulb_stroke.svg": "128e9400ef7a56c03ed4a0fc06fef4d6",
 "assets/lib/asserts/general_asserts/log-out.svg": "b503eab0ab8f6fa231011828af85bf91",
-"assets/lib/asserts/general_asserts/minus.svg": "a88d50bf4ebaf9b08d18bc7fe619afd8",
+"assets/lib/asserts/general_asserts/minus.svg": "2b19e8735a850dbd47ec794b19a5cda1",
 "assets/lib/asserts/general_asserts/more.svg": "4e2f9a4f9d85fc8417118d4c88710a67",
 "assets/lib/asserts/general_asserts/notification.svg": "eb2b4fecc0f4f647ed3079bb4c79d5fe",
-"assets/lib/asserts/general_asserts/plus.svg": "28bd189259f9962b4c977809dec1a451",
+"assets/lib/asserts/general_asserts/plus.svg": "1db6a6b50dde5a9b65aed4d07c798026",
 "assets/lib/asserts/general_asserts/plus_thin.svg": "3631b3c914ea00454d8ec246a1704c18",
 "assets/lib/asserts/general_asserts/refresh.svg": "5cdd717252710bf85774bedd2caede10",
 "assets/lib/asserts/general_asserts/refreshing_1.svg": "ba685b80ed9431be104ff40b8f6e9489",
@@ -53,6 +53,7 @@ const RESOURCES = {
 "assets/lib/asserts/images/food.png": "1ddb71cec6687b5438455a3628a8abe7",
 "assets/lib/asserts/images/fridge.png": "97b7e9ae8ba656af8106600c56e7be50",
 "assets/lib/asserts/images/heelo.jpg": "faead60b1423634ebf9a30bb2b2fcbc6",
+"assets/lib/asserts/images/ingredient.png": "7cf46b9f15f96e26a55422b0a4263a20",
 "assets/lib/asserts/images/rcm_dish.png": "33d67799417a4d92c78bf194eda08818",
 "assets/lib/asserts/images/rcm_meal.png": "06d68e67822c848352cef3b377d25abe",
 "assets/lib/asserts/images/take_igd.png": "b720104fabe781b3865a7e691e0c1910",
@@ -85,9 +86,9 @@ const RESOURCES = {
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
 "icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
-"index.html": "02896af77c08a5ce1618c7d252f83f8d",
-"/": "02896af77c08a5ce1618c7d252f83f8d",
-"main.dart.js": "2c846df94f1bf8ae67bd2586364f4045",
+"index.html": "63a5c19a146984033c3db585f704e0aa",
+"/": "63a5c19a146984033c3db585f704e0aa",
+"main.dart.js": "751d3766b04daf8a8b2979d218334b25",
 "manifest.json": "4b6b5e001327ed513d8e458a14958c13",
 "version.json": "70601ec6b406c548fdeed13677fbb0ff"
 };
