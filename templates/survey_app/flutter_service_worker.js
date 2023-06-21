@@ -3,7 +3,7 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "assets/AssetManifest.json": "75abc90c1445582e6502dcb90cf365a2",
+  "assets/AssetManifest.json": "9e035a18c4f89341480a45c49c4826f4",
 "assets/FontManifest.json": "80ee7aa8e2a97688adc3a79f4c13a61c",
 "assets/fonts/MaterialIcons-Regular.otf": "e7069dfd19b331be16bed984668fe080",
 "assets/lib/asserts/app_icon/icon.png": "9274662457e48aad71c41b161f9ede55",
@@ -50,13 +50,14 @@ const RESOURCES = {
 "assets/lib/asserts/images/device.png": "24a7f893e76a074628521005fcd15fc3",
 "assets/lib/asserts/images/device_2.png": "35c9072dabc0f7bf7592cef864060f36",
 "assets/lib/asserts/images/device_manage.png": "5cf11e3072e2da059a1820c753d78706",
+"assets/lib/asserts/images/dish.png": "307421b638ae027d8603f3186254a648",
 "assets/lib/asserts/images/food.png": "1ddb71cec6687b5438455a3628a8abe7",
 "assets/lib/asserts/images/fridge.png": "97b7e9ae8ba656af8106600c56e7be50",
 "assets/lib/asserts/images/heelo.jpg": "faead60b1423634ebf9a30bb2b2fcbc6",
-"assets/lib/asserts/images/ingredient.png": "7cf46b9f15f96e26a55422b0a4263a20",
+"assets/lib/asserts/images/ingredient.png": "b9dcc98e8f7510a043f678ad6df74cba",
 "assets/lib/asserts/images/rcm_dish.png": "33d67799417a4d92c78bf194eda08818",
 "assets/lib/asserts/images/rcm_meal.png": "06d68e67822c848352cef3b377d25abe",
-"assets/lib/asserts/images/take_igd.png": "b720104fabe781b3865a7e691e0c1910",
+"assets/lib/asserts/images/take_igd.png": "399be179540b87803fd0d2222f914946",
 "assets/lib/fonts/Gilroy/Gilroy-Black.otf": "91508b3f0beef57e1e54b407b0343020",
 "assets/lib/fonts/Gilroy/Gilroy-BlackItalic.otf": "59f76af44fc0b60bc5ca1ac226d92462",
 "assets/lib/fonts/Gilroy/Gilroy-Bold.otf": "83a4e50a248e2b9da6b2e6802834646d",
@@ -75,7 +76,7 @@ const RESOURCES = {
 "assets/lib/fonts/Gilroy/Gilroy-SemiBoldItalic.otf": "7bc3fa7432dbbe53aca7f864d9352845",
 "assets/lib/fonts/Gilroy/Gilroy-Thin.otf": "d77450bfee1e54ea478b559bc390d078",
 "assets/lib/fonts/Gilroy/Gilroy-ThinItalic.otf": "cfcf7956ff37267687c865cf4c6b0326",
-"assets/NOTICES": "c184c3aef738e252de9b54b21d390ee2",
+"assets/NOTICES": "edf162663c6fd63c146390212477ab35",
 "canvaskit/canvaskit.js": "97937cb4c2c2073c968525a3e08c86a3",
 "canvaskit/canvaskit.wasm": "3de12d898ec208a5f31362cc00f09b9e",
 "canvaskit/profiling/canvaskit.js": "c21852696bc1cc82e8894d851c01921a",
@@ -86,9 +87,9 @@ const RESOURCES = {
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
 "icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
-"index.html": "e8ff37ba6f307f82945ba23cf25bbe1a",
-"/": "e8ff37ba6f307f82945ba23cf25bbe1a",
-"main.dart.js": "83e9fc2c652c9084df3ac00b29274332",
+"index.html": "9471baaea7ddb49ccb6471c98f794c36",
+"/": "9471baaea7ddb49ccb6471c98f794c36",
+"main.dart.js": "68c4af9c75ee558617e514c77e1f40a8",
 "manifest.json": "4b6b5e001327ed513d8e458a14958c13",
 "version.json": "70601ec6b406c548fdeed13677fbb0ff"
 };
