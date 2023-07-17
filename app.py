@@ -84,8 +84,8 @@ def handle_mqtt_message(client, userdata, message):
         data = {
             "device_id": deviceID,
             "data_time": time,
-            "data_temp": float(mqttData[0]),
-            "data_humi": float(mqttData[1]),
+            "data_temp": float(mqttData[1]),
+            "data_humi": float(mqttData[2]),
         }
         databaseAccess.insertCollectionItem(collectionList['SensorsData'], data)
 
