@@ -77,7 +77,11 @@ def handle_connect(client, userdata, flags, rc):
 def handle_mqtt_message(client, userdata, message):
     topic = message.topic
     deviceID = topic.split('/')[0]
-    mqttData = message.payload.decode().split(" ")
+    print("\"" + message.payload.decode() + "\"")
+    mqttMessage = message.payload.decode()
+    if message.payload.decode().startswith(' '):
+        mqttMessage = mqttMessage[1:]
+    mqttData = mqttMessage.split(" ")
     time = datetime.now(timezone)
     if topic.split('/')[1] == 'SensorsData':
         data = {
