@@ -79,15 +79,15 @@ def handle_mqtt_message(client, userdata, message):
     deviceID = topic.split('/')[0]
     mqttData = message.payload.decode().split(" ")
     time = datetime.now(timezone)
-    print(time)
     if topic.split('/')[1] == 'SensorsData':
         data = {
             "device_id": deviceID,
             "data_time": time,
-            "data_temp": float(mqttData[1]),
-            "data_humi": float(mqttData[2]),
+            "data_temp": float(mqttData[0]),
+            "data_humi": float(mqttData[1]),
         }
         databaseAccess.insertCollectionItem(collectionList['SensorsData'], data)
+    print("Received MQTT data at " + str(time) + ".")     
 
 # app routes
 
