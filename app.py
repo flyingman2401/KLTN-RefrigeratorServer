@@ -256,6 +256,7 @@ def handle_recommend():
         # action 1: get list of dishes
         if (args.get("action", type=int) == 1):
             time = datetime.now(timezone)
+            print(time)
             foodRcm.collectionList = collectionList
             foodRcm.RecommendDishes(time, "USER001")
             listRcmDish = databaseAccess.listCollectionItem(collectionList['RecommendationDish'], {}, "weight", -1)
@@ -263,6 +264,7 @@ def handle_recommend():
         # action 2: get list of meals
         elif (args.get("action", type=int) == 2):
             time = datetime.now(timezone)
+            print(time)
             foodRcm.collectionList = collectionList
             foodRcm.RecommendMeals(time, "USER001")
             listRcmMeal = databaseAccess.listCollectionItem(collectionList['RecommendationMeal'], {}, "weight", -1)
