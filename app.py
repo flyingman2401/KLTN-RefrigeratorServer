@@ -143,7 +143,6 @@ def handle_food_management():
         x = databaseAccess.insertCollectionItem(collectionList['IngredientInsideFridge'], data)
         if (x):
             time = datetime.now(timezone)
-            time = time.replace(hour=10)
             foodRcm.collectionList = collectionList
             foodRcm.RecommendDishes(time, data['user_id'])
             foodRcm.RecommendMeals(time, data['user_id'])
